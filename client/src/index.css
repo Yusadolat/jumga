@@ -1,0 +1,17 @@
+:root {
+  --main-green: #04dcc6;
+  --darkred: #db6400;
+  --orange: #ffa62b;
+  --light: #f8f1f1;
+  --dark: #222831;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Be Vietnam", sans-serif;
+}
+* {
+  box-sizing: border-box;
+  font-family: "Be Vietnam", sans-serif;
+  color: var(--dark);
+}
