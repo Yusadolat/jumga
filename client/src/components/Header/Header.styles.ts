@@ -27,19 +27,23 @@ export const HeaderDiv = styled.header`
         }
     }
 
-    button{
-        width: 170px;
-        padding: 8px 0 10px 0;
-        border: none;
-        border-radius: 7px;
-        font-size: 16px;
-        cursor: pointer;
-        background: var(--main-green);
-        color: var(--light);
-        font-weight: 600;
+    
+`
+export const LinkButton = styled(Link)`
+    padding: 9px 14px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    cursor: pointer;
+    background: var(--main-green);
+    color: var(--light);
+    font-weight: 600;
+    text-decoration: none;
+    &.merchants {
+        background: var(--darkred);
     }
 `
-
 
 export const CartButton = styled(Link)`
     background: none;

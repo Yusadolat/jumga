@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+
+
 export const FormContainer = styled.div`
 height: 100vh;
 display: flex;
@@ -13,7 +15,8 @@ form {
     background: var(--light);
     padding: 40px 30px;
     border-radius: 9px;
-    input{
+    input,
+    select {
         width: 100%;
         height: 45px;
         border: 1px solid rgba(0,0,0,.34);
@@ -22,7 +25,12 @@ form {
         margin-top: 30px;
         font-size: 18px;
     }
+    select{
+        background: white;
+        padding: 0 10px;
+    }
     button {
+        margin: 20px auto;
         height: 45px;
         width: 190px;
         cursor: pointer;
@@ -32,7 +40,6 @@ form {
         font-weight: 500;
         color: #fff;
         display: block;
-        margin: 20px auto;
     }
     span{
         text-align: left !important;

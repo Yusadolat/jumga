@@ -2,30 +2,26 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import { HeaderDiv, CartButton } from './Header.styles';
-
+import { HeaderDiv, CartButton, LinkButton } from './Header.styles';
+import Logo from '../../assets/logo.svg'
 
 function Header() {
-    const length = useSelector((state:any) => state.cart.length);
+    // const length = useSelector((state:any) => state.cart.length);
     return (
         <HeaderDiv>
-            <Link to="/">Qoat</Link>
+            <Link to="/">
+            <img width="70" src={Logo} alt="Logo"/>
+            </Link>
             <nav>
-                <ul>
-                    <li><Link to="/">Shop</Link></li>
-                    <li><Link to="/">Footwears</Link></li>
-                    <li><Link to="/">BackPacks</Link></li>
-                    <li><Link to="/">Faq</Link></li>
-                    <li><Link to="/">About</Link></li>
-                </ul>
+                
             </nav>
             <div>
-                <CartButton to="/cart">
+                {/* <CartButton to="/cart">
                     <i className="fas fa-shopping-cart"></i> 
                     <span>{length || 0 }</span> 
-                </CartButton>
-                <button>For Merchant</button>
-                <button>My Account</button>
+                </CartButton> */}
+                <LinkButton className="merchants" to="/merchant/login">For Merchant</LinkButton>
+                <LinkButton to="/login">Login</LinkButton>
             </div>
         </HeaderDiv>
     )

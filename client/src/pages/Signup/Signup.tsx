@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg'
 // STLES
-import {FormContainer} from './Login.style'
+import {FormContainer} from './Signup.styles'
 import { Link } from 'react-router-dom';
 type Inputs = {
     email: string,
     password: string,
+    fullname: string,
+    country: string
   };
  
-const Login = () => {
+const Signup = () => {
     const { register, handleSubmit, watch, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
         console.log(data);
@@ -23,7 +25,16 @@ const Login = () => {
                     <Link to="/">
                     <img width="70" src={Logo} alt="Logo"/>
                     </Link>
-                    <h2>Login</h2>
+                    <h2>Sign Up</h2>
+
+                    <input type="text" name="fullname" placeholder="Enter your full name" ref={register({ required: true })} />
+                    {errors.fullname && <span>This field is required</span>}
+
+                    <select name="country" ref={register({ required: true })}>
+                        <option value="">Select your country</option>
+                    </select>
+                    {errors.country && <span>This field is required</span>}
+
                     <input type="email" name="email" placeholder="Enter your email" ref={register({ required: true })} />
                     {errors.email && <span>This field is required</span>}
                     
@@ -31,7 +42,6 @@ const Login = () => {
                     {errors.password && <span>This field is required</span>}
                     
                     <button>Submit</button>
-
                     <p>Don't have an account? <Link to="/signup">Sign up</Link> </p>
                 </form>
             </FormContainer>
@@ -39,4 +49,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Signup
