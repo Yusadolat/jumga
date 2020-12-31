@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./users/userRoutes.js"
+import productRoutes from "./products/productController.js"
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
   res.send("Wowza, API is running....");
 });
 app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/products', productRoutes)
 
 
 const PORT = process.env.PORT || 5000;
