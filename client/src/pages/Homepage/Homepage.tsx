@@ -14,18 +14,26 @@ interface Props {
     products: Array<any>
 }
 
-const categories = ["men clothing", "jewelery", "electronics", "women clothing", ];
 
 const Homepage:React.FC<Props> = () => {
 
     const products = useSelector((state: any) => state.products);
-    
+
+    const {loading, error} = products;
+    console.log(products)
+
+   
     return (
        <>
        <Header />
        <Main />
+       <div style={{textAlign: 'center'}}>
+            {error ? <p>{error}</p> : <></>}
+
+            {loading ? <h3 style={{color: 'red'}}>FETCHING ITEMS...</h3> : <></>}
+       </div>
        
-       {categories.map((item, idx) => <FeaturedProducts key={idx} products={products} title={item}/>)}
+       {!loading && !error ? <FeaturedProducts products={products.products} title="Featured Products"/> : <></>}
        </>
     )
 }

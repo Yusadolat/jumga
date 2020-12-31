@@ -44,19 +44,3 @@ export const LinkButton = styled(Link)`
         background: var(--darkred);
     }
 `
-
-export const CartButton = styled(Link)`
-    background: none;
-    outline: none;
-    border: none;
-    font-size: 20px;
-    position: relative;
-    padding: 20px;
-
-    span {
-        font-size: 13px;
-        position: absolute;
-        top: 9px;
-        font-weight: 700;
-    }
-`
