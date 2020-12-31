@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
       unique: true,
     },
     phone_number: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
@@ -26,8 +26,8 @@ const userSchema = mongoose.Schema(
     bank_name: {
       type: String,
     },
-    bank_code: { type: Number },
-    account_number: { type: Number },
+    bank_code: { type: String },
+    account_number: { type: String },
     password: {
       type: String,
       required: true,
@@ -37,6 +37,8 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    subaccount_id: { type: Number },
+    split_value: { type: Number, default: 97.5 },
   },
   {
     timestamps: true,
