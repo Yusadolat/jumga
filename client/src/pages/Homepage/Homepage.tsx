@@ -30,7 +30,7 @@ const Homepage:React.FC<Props> = () => {
        <div style={{textAlign: 'center'}}>
             {error ? <p>{error}</p> : <></>}
 
-            {loading ? <h3>FETCHING ITEMS...</h3> : <></>}
+            {loading ? <h3 style={{color: 'red'}}>FETCHING ITEMS...</h3> : <></>}
        </div>
        
        {!loading && !error ? <FeaturedProducts products={products.products} title="Featured Products"/> : <></>}

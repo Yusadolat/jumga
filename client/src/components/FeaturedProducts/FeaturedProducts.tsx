@@ -42,7 +42,7 @@ const FeaturedProducts:React.FC<Props> = ({products, title}) =>  {
         <Container>
             <HeaderTitle title={title}/>
             <FeaturedDiv>
-                {products.map((item: Product, idx:number) => <ProductItem key={idx}  {...item} />
+                {products?.map((item: Product, idx:number) => <ProductItem key={idx}  {...item} />
                 )}
             </FeaturedDiv>
         </Container>

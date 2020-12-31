@@ -9,10 +9,13 @@ const initialState:any = {
 };
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-    const response = await fetch('https://fakestoreapi.com/products');
-    const responseJson = await response.json();
-    console.log(responseJson);
-    return responseJson;
+    try {
+        const response = await fetch('https://fakestoreapi.com/products');
+        const responseJson = await response.json();
+        return responseJson;
+    } catch (error) {
+        console.log(error.message);
+    }
   })
 
   
