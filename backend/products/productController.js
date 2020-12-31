@@ -1,28 +1,17 @@
 import asyncHandler from "express-async-handler";
-import Product from "../models/productModel.js";
+import Product from "../products/productModel.js";
 
-// @desc    Fetch all products
-// @route   GET /api/products
-// @access  Public
+
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 10;
-  const page = Number(req.query.pageNumber) || 1;
+  try {
+    const products = await Product.find()
 
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
-      }
-    : {};
+  res.json(products );
 
-  const count = await Product.countDocuments({ ...keyword });
-  const products = await Product.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-});
+  } catch (error) {
+      res.status(500).send({message: error});
+  }
+      
+  }) 
 
 export { getProducts };
