@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import { addProducts } from './features/products/productsSlice'
+import { fetchProducts } from './features/products/productsSlice'
 
 
 // Pages
@@ -21,12 +21,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then(res => res.json())
-      .then(json => {
-        dispatch(addProducts(json));
-      })
-      .catch(err => console.log({ err }))
+    dispatch(fetchProducts());
   // eslint-disable-next-line
   }, []);
 

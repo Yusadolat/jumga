@@ -96,11 +96,13 @@ const MainContainer = styled(Container)`
 const ProductPage:React.FC = (props: any) => {
     const dispatch = useDispatch();
     const {products, cart} = useSelector((state: any) => state);
+    const productsArray = products.products;
     const id = props.location.state.id;
-    const product = products.find((item:any) => +item.id === +id);
+    const product = productsArray.find((item:any) => +item.id === +id);
     const history = props.history;
     const checkIfAddedToCart = cart.find((item:any) => +item.id === +id);
-    console.log(cart, checkIfAddedToCart);
+    
+
 
     const [quantity, setQuantity] = useState<number>(1);
 
@@ -134,6 +136,8 @@ const ProductPage:React.FC = (props: any) => {
                         </div>
                     </div>
                 </div>
+            
+               
             </MainContainer>
         </>
     )

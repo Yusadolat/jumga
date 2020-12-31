@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import styled from 'styled-components'
 import HeaderTitle from '../HeaderTitle/HeaderTitle';
 
@@ -23,24 +22,7 @@ const FeaturedDiv = styled.div`
         justify-content: center;
     }
 `
-const NavigateButton = styled(Link)`
-    padding: 17px 30px;
-    width: 280px;
-    margin-top: 20px;
-    margin: initial auto;
-    display: inline-block;
-    font-size: 18px;
-    font-weight: 700;
-    text-align: center;
-    box-shadow: 1px 4px 10px 1px rgba(0,0,0,.095);
-    text-decoration: none;
-    text-transform: uppercase;
-    border: 1px solid rgba(0,0,0,.035);
-    transition: .3s;
-    &:hover{
-        transform: scale(1.02);
-    }
-`
+
 type Product  = {
     category: string;
     description: string;
@@ -60,11 +42,9 @@ const FeaturedProducts:React.FC<Props> = ({products, title}) =>  {
         <Container>
             <HeaderTitle title={title}/>
             <FeaturedDiv>
-                {products.filter((product) => product.category === title).map((item: Product, idx:number) => idx < 4 && <ProductItem key={idx}  {...item} />
+                {products.map((item: Product, idx:number) => <ProductItem key={idx}  {...item} />
                 )}
             </FeaturedDiv>
-
-            <NavigateButton to={`/category/${title.toLowerCase()}`}>All {title}</NavigateButton>
         </Container>
     )
 }

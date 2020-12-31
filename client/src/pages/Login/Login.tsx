@@ -11,7 +11,7 @@ type Inputs = {
   };
  
 const Login = () => {
-    const { register, handleSubmit, watch, errors } = useForm<Inputs>();
+    const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
         console.log(data);
     }
