@@ -3,7 +3,7 @@ import axios from 'axios'
 import generateToken from '../utils/generateToken.js'
 import User from "../users/userModel.js";
 
-const authUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
   
     const user = await User.findOne({ email })
@@ -105,4 +105,4 @@ console.log(subaccount_id)
 
   
 });
-export { authUser, registerUser };
+export { loginUser, registerUser };
