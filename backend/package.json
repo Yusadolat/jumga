@@ -10,6 +10,9 @@
     "dev": "nodemon app.js",
     "data:import": "node seeder.js"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "author": "Yusadolat",
   "license": "ISC",
   "dependencies": {
