@@ -37,8 +37,9 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
-    subaccount_id: { type: Number },
-    split_value: { type: Number, default: 97.5 },
+    account_status: { type: Boolean, required: true, default: false },
+    subaccount_id: { type: String },
+    split_value: { type: Number, default: 0.097 },
   },
   {
     timestamps: true,

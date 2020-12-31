@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import axios from 'axios'
 import generateToken from '../utils/generateToken.js'
 import User from "../users/userModel.js";
 
@@ -41,7 +42,35 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  const user = await User.create({
+  //Create Subaccount
+  let APIKEY = "FLWSECK_TEST-8c7bc72d0a333a76d5f00cdaf701c053-X";
+
+  var data =  JSON.stringify({
+    "account_bank": bank_code,
+    "account_number": account_number,
+    "business_name": business_name,
+    "business_email": email,
+    "business_mobile": phone_number,
+    "country": country,
+    "split_type": "percentage",
+    "split_value": 0.093
+  })
+  var config = {
+    method: 'post',
+    url: 'https://api.flutterwave.com/v3/subaccounts',
+    headers: { 
+      'Authorization': `Bearer ${APIKEY}`, 
+      'Content-Type': 'application/json'
+    },
+    data : data
+  };
+  
+  axios(config)
+  .then(async function (response)  {
+      //res.status(200).json(response.data.data);
+ const {subaccount_id} = response.data.data
+console.log(subaccount_id)
+ const newUser = await User.create({
     fullname,
     email,
     password,
@@ -51,20 +80,29 @@ const registerUser = asyncHandler(async (req, res) => {
     bank_name,
     bank_code,
     account_number,
+    subaccount_id
   });
 
-  if (user) {
+  if (newUser) {
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
+      _id: newUser._id,
+      fullname: newUser.fullname,
+      business_name: newUser.business_name,
+      email: newUser.email,
+      isMerchant: newUser.isMerchant,
+      account_status: newUser.account_status,
+      token: generateToken(newUser._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    res.status(400).send({message: error})
+    
   }
-});
+  })
+  .catch(function (error) {
+    res.status(500).send({message: error});
+    console.log(error);
+  });
 
+  
+});
 export { authUser, registerUser };
