@@ -1,11 +1,7 @@
 import React from 'react'
-import {useDispatch} from 'react-redux';
 import { useForm } from "react-hook-form";
-import {Container} from '../../styles/GlobalStyles'
-import Logo from '../../assets/logo.svg';
-
-import {SignInUser} from '../../features/user/userSlice';
-
+import {Container} from '../../../styles/GlobalStyles'
+import Logo from '../../../assets/logo.svg'
 // STLES
 import {FormContainer} from './Login.style'
 import { Link } from 'react-router-dom';
@@ -14,12 +10,10 @@ type Inputs = {
     password: string,
   };
  
-const Login = () => {
-    const dispatch = useDispatch();
-
+const MerchantLogin = () => {
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
-        dispatch(SignInUser(data))
+        console.log(data);
     }
 
     return (
@@ -29,7 +23,7 @@ const Login = () => {
                     <Link to="/">
                     <img width="70" src={Logo} alt="Logo"/>
                     </Link>
-                    <h2>Login</h2>
+                    <h2>Merchant Login</h2>
                     <input type="email" name="email" placeholder="Enter your email" ref={register({ required: true })} />
                     {errors.email && <span>This field is required</span>}
                     
@@ -38,11 +32,11 @@ const Login = () => {
                     
                     <button>Submit</button>
 
-                    <p>Don't have an account? <Link to="/signup">Sign up</Link> </p>
+                    <p>Don't have an account? <Link to="/merchant/signup">Sign up</Link> </p>
                 </form>
             </FormContainer>
         </Container>
     )
 }
 
-export default Login
+export default MerchantLogin

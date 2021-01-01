@@ -73,7 +73,7 @@ interface Props {
 }
 
 
-const ProductItem:React.FC<Props> = ({ price, title, id, image, category}) => {
+const ProductItem:React.FC<Props> = ({ price, title, id, image}) => {
     return (
         <ProductDiv>
             <div className="img-wrapper">
@@ -81,7 +81,7 @@ const ProductItem:React.FC<Props> = ({ price, title, id, image, category}) => {
             </div>
             <h3 className="title">{title.length > 50 ? title.substring(0, 50) + "..." : title}</h3>
             <h4 className="price">$ {price}</h4>
-            <Link to={{pathname:`/${category.split(" ")[0]}/${title}`, state: {id}}} className="btn">View Product</Link>
+            <Link to={`product/${id}`} className="btn">View Product</Link>
         </ProductDiv>
     )
 }

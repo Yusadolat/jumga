@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {withRouter} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {withRouter, useParams} from 'react-router-dom';
 import styled from 'styled-components';
 
-// import { RootState } from '../../redux/store';
-import { addItemToCart } from '../../features/cart/cartSlice'
 
 
 import Header from '../../components/Header/Header'
@@ -94,21 +92,20 @@ const MainContainer = styled(Container)`
 
 
 const ProductPage:React.FC = (props: any) => {
-    const dispatch = useDispatch();
-    const {products, cart} = useSelector((state: any) => state);
+    const params:any = useParams();
+    const id = params.id;
+
+    const {products, } = useSelector((state: any) => state);
     const productsArray = products.products;
-    const id = props.location.state.id;
     const product = productsArray.find((item:any) => +item.id === +id);
     const history = props.history;
-    const checkIfAddedToCart = cart.find((item:any) => +item.id === +id);
+
     
 
 
     const [quantity, setQuantity] = useState<number>(1);
 
-    const AddItemToCart = () => {
-        dispatch(addItemToCart({product, id, quantity}));
-    }
+
     return (
         <>
             <Header />
@@ -129,9 +126,6 @@ const ProductPage:React.FC = (props: any) => {
                             <button onClick={() => setQuantity(quantity + 1)}>+</button>
                         </div>
                         <div className="cta">
-                            <button onClick={() => AddItemToCart()}>
-                                {checkIfAddedToCart ? "Remove from Cart" : "Add to Cart"}
-                            </button>
                             <button>Proceed to Checkout</button>
                         </div>
                     </div>

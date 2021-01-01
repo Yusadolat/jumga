@@ -1,10 +1,15 @@
 import React from 'react'
+import {useDispatch} from 'react-redux';
 import { useForm } from "react-hook-form";
+import { Link } from 'react-router-dom';
+
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg'
 // STLES
 import {FormContainer} from './Signup.styles'
-import { Link } from 'react-router-dom';
+
+import {RegisterUser} from '../../features/user/userSlice'
+
 type Inputs = {
     email: string,
     password: string,
@@ -13,9 +18,11 @@ type Inputs = {
   };
  
 const Signup = () => {
+    const dispatch = useDispatch();
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
         console.log(data);
+        dispatch(RegisterUser(data));
     }
 
     return (
@@ -32,6 +39,10 @@ const Signup = () => {
 
                     <select name="country" ref={register({ required: true })}>
                         <option value="">Select your country</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="GH">Ghana</option>
+                        <option value="NG">Kenya</option>
+                        <option value="UK">UK</option>
                     </select>
                     {errors.country && <span>This field is required</span>}
 
@@ -42,7 +53,7 @@ const Signup = () => {
                     {errors.password && <span>This field is required</span>}
                     
                     <button>Submit</button>
-                    <p>Don't have an account? <Link to="/signup">Sign up</Link> </p>
+                    <p>Already have an account? <Link to="/login">Login</Link> </p>
                 </form>
             </FormContainer>
         </Container>

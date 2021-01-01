@@ -50,4 +50,3 @@ const FeaturedProducts:React.FC<Props> = ({products, title}) =>  {
 }
 
 export default FeaturedProducts
-// item={item}
