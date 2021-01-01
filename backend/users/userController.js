@@ -38,7 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400);
+    res.status(400).send({message: error});
     throw new Error("User already exists");
   }
 
@@ -99,7 +99,7 @@ console.log(subaccount_id)
   }
   })
   .catch(function (error) {
-    res.status(500).send({message: error.message});
+    res.status(500).send({message: error});
     throw new Error(error)
   });
 
