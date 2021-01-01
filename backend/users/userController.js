@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+const { body, validationResult } = require('express-validator');
 import axios from 'axios'
 import generateToken from '../utils/generateToken.js'
 import User from "../users/userModel.js";
@@ -34,6 +35,12 @@ const registerUser = asyncHandler(async (req, res) => {
     bank_code,
     account_number,
   } = req.body;
+  body('fullname').isString()
+  body('email').isEmail(),
+  body('password').isLength({ min: 5 })
+  body('bank_name').isLength({min: 6})
+  body('bank_code').isLength({min: 4})
+
 
   const userExists = await User.findOne({ email });
 
@@ -41,7 +48,10 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400).send({message: error});
     throw new Error("User already exists");
   }
-
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   //Create Subaccount
   let APIKEY = "FLWSECK_TEST-8c7bc72d0a333a76d5f00cdaf701c053-X";
 
