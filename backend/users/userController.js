@@ -99,8 +99,7 @@ console.log(subaccount_id)
   }
   })
   .catch(function (error) {
-    res.status(500).send({message: error});
-    throw new Error(error)
+    res.status(400).json({message: error.message});
   });
 
   
