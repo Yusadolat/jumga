@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import { body, validationResult } from 'express-validator';
 import axios from 'axios'
 import generateToken from '../utils/generateToken.js'
 import User from "../users/userModel.js";
@@ -34,14 +35,41 @@ const registerUser = asyncHandler(async (req, res) => {
     bank_code,
     account_number,
   } = req.body;
+  
 
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400);
+    res.status(400).send({message: error});
     throw new Error("User already exists");
   }
-
+  
+  if (bank_name === ""){
+    const newUser = await User.create({
+      fullname,
+      email,
+      password,
+      phone_number,
+      country,
+      business_name,
+      bank_name,
+      bank_code,
+      account_number,
+    });
+  
+    if (newUser) {
+      res.status(201).json({
+        _id: newUser._id,
+        fullname: newUser.fullname,
+        email: newUser.email,
+        isMerchant: newUser.isMerchant,
+        token: generateToken(newUser._id),
+      });
+    } else {
+      res.status(400).send({message: error})
+      
+    }
+  }else{
   //Create Subaccount
   let APIKEY = "FLWSECK_TEST-8c7bc72d0a333a76d5f00cdaf701c053-X";
 
@@ -99,10 +127,9 @@ console.log(subaccount_id)
   }
   })
   .catch(function (error) {
-    res.status(500).send({message: error.message});
-    throw new Error(error)
+    res.status(400).json({message: error});
   });
-
+}
   
 });
 export { loginUser, registerUser };
