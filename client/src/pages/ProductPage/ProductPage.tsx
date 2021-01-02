@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useSelector} from 'react-redux';
-import {withRouter, useParams} from 'react-router-dom';
+import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
+import {withRouter, useParams, Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 
@@ -41,33 +42,6 @@ const MainContainer = styled(Container)`
                 border: 1px solid rgba(0,0,0,.15);
                 padding: 50px;
             }
-            .quantity-wrapper{
-                span {
-                    width: 40px;
-                    display: inline-block;
-                    font-size: 18px;
-                    text-align: center;
-                    padding: 0; 
-                    margin: 0 20px; 
-                }
-                button[disabled]{
-                    opacity: .4;
-                    cursor: not-allowed;
-                }
-                button {
-                    cursor: pointer;
-                    border: none;
-                    background: none;
-                    font-weight: 700;
-                    width: 50px;
-                    height: 50px;
-                    padding-bottom: 10px;
-                    font-size: 30px;
-                    outline: none;
-                    background: var(--main-green);  
-                    border-radius: 50%;
-                }
-            }
             .cta{
                 display: flex;
                 button {
@@ -93,18 +67,67 @@ const MainContainer = styled(Container)`
 
 const ProductPage:React.FC = (props: any) => {
     const params:any = useParams();
+    
     const id = params.id;
 
-    const {products, } = useSelector((state: any) => state);
+    const {products, user } = useSelector((state: any) => state);
     const productsArray = products.products;
-    const product = productsArray.find((item:any) => +item.id === +id);
+    const product = productsArray.find((item:any) => item._id === id);
     const history = props.history;
 
+    const {isMerchant} = user.user;
+    const {isSignedIn} = user;
+    let business_name = "ABC", email = "test@gmail.com", fullname="Test Test", phone_number = '00120921092';
+
     
-
-
-    const [quantity, setQuantity] = useState<number>(1);
-
+    const config = {
+        public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
+        tx_ref: Date.now(),
+        amount: product.price,
+        currency: 'USD',
+        payment_options: 'card,mobilemoney,ussd',
+        customer: {
+          email,
+          phonenumber:  phone_number,
+          name: fullname,
+        },
+        subaccounts: [
+            {
+              id: "RS_A8EB7D4D9C66C0B1C75014EE67D4D663",
+              transaction_split_ratio: 2,
+            },
+            {
+              id: "RS_CF5B2A15E2CCD39F44E7774376EAE5C5",
+              transaction_split_ratio: 2,
+            },
+        ],
+        customizations: {
+          title: business_name,
+          description: 'Payment for store verification',
+          logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
+        },
+      };
+    
+      const fwConfig:any = {
+        ...config,
+        text: 'Pay with Flutterwave!',
+        callback: (response:any) => {
+           console.log(response);
+          closePaymentModal() // this will close the modal programmatically
+        },
+        onClose: () => {},
+      };
+    
+      let content;
+      if(isSignedIn){
+        if(isMerchant){
+            content = <p>You need to sign in as a customer to be able to purchase Item</p>
+        }else{
+            content = <FlutterWaveButton {...fwConfig} />
+        }
+      }else{
+        content = <Link to="/login">Login to Checkout</Link>
+      }
 
     return (
         <>
@@ -119,18 +142,12 @@ const ProductPage:React.FC = (props: any) => {
                         <h2>{product?.title}</h2>
                         <h2 className="price">$ {product?.price}</h2>
 
-                        <h4>Quantity</h4>
-                        <div className="quantity-wrapper">
-                            <button disabled={quantity < 2 && true} onClick={() => setQuantity(quantity - 1)}>-</button> 
-                                <span>{quantity}</span>
-                            <button onClick={() => setQuantity(quantity + 1)}>+</button>
-                        </div>
                         <div className="cta">
-                            <button>Proceed to Checkout</button>
+                            {content}
                         </div>
                     </div>
                 </div>
-            
+                
                
             </MainContainer>
         </>

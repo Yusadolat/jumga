@@ -14,6 +14,7 @@ import Signup from './pages/Signup/Signup';
 import MerchantLogin from './pages/Merchants/Login/Login';
 import MerchantSignup from './pages/Merchants/Signup/Signup'
 import Dashboard from './pages/Dashboard/Dashboard'
+import Verify from './pages/Merchants/Verify/Verify';
 
 // Components
 import ScrollToTop from './ScrollToTop';
@@ -21,9 +22,11 @@ import ScrollToTop from './ScrollToTop';
 import './App.css';
 
 
+
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.user);
+  const {products, user } = useSelector((state: any) => state);
+  console.log({products, user})
   const {isMerchant} = user.user;
   const { isSignedIn } = user;
 
@@ -32,6 +35,7 @@ const App: React.FC = () => {
     dispatch(fetchProducts());
   // eslint-disable-next-line
   }, []);
+
 
 
   return (
@@ -47,6 +51,7 @@ const App: React.FC = () => {
 
         <Route path="/merchant/login" component={MerchantLogin} />
         <Route path="/merchant/signup" component={MerchantSignup} />
+        <Route path="/verify" component={Verify} />
 
         <Route path="/dashboard" render={props =>  {
           if(isSignedIn){

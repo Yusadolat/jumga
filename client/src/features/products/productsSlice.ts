@@ -10,8 +10,9 @@ const initialState:any = {
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
     try {
-        const response = await fetch('https://fakestoreapi.com/products');
+        const response = await fetch('https://jumga.herokuapp.com/api/v1/products');
         const responseJson = await response.json();
+        console.log(responseJson)
         return responseJson;
     } catch (error) {
         console.log(error.message);

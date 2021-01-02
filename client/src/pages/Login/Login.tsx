@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {useDispatch} from 'react-redux';
 import { useForm } from "react-hook-form";
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg';
 
-import {SignInUser} from '../../features/user/userSlice';
+import {addUser} from '../../features/user/userSlice';
+
 
 // STLES
 import {FormContainer} from './Login.style'
@@ -15,11 +16,32 @@ type Inputs = {
   };
  
 const Login = () => {
-    const dispatch = useDispatch();
+    const [error, setError] = useState("");
+
+    const dispatch = useDispatch()
+
+
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
-        dispatch(SignInUser(data))
+        console.log(data);
+        fetch("https://jumga.herokuapp.com/api/v1/users/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then((res:any) => res.json())
+        .then((json) => {
+            console.log(json);
+            dispatch(addUser(json));
+        })
+        .catch((err:any) => {
+            setError(err.message);
+            console.log({err})
+        })
+        
     }
 
     return (
@@ -36,6 +58,7 @@ const Login = () => {
                     <input type="password" name="password" placeholder="Password" ref={register({ required: true })} />
                     {errors.password && <span>This field is required</span>}
                     
+                    {error && <p>{error}</p>}
                     <button>Submit</button>
 
                     <p>Don't have an account? <Link to="/signup">Sign up</Link> </p>
