@@ -127,7 +127,7 @@ console.log(subaccount_id)
   }
   })
   .catch(function (error) {
-    res.status(400).json({message: error.message});
+    res.status(400).json({message: error});
   });
 }
   
