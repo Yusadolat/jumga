@@ -118,6 +118,7 @@ console.log(subaccount_id)
       email: newUser.email,
       isMerchant: newUser.isMerchant,
       account_status: newUser.account_status,
+      split_value: newUser.split_value,
       token: generateToken(newUser._id),
     }).catch(function (error) {
       res.status(400).json({message: error.message});
