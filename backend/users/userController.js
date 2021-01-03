@@ -71,7 +71,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }else{
   //Create Subaccount
-  let APIKEY = "FLWSECK_TEST-8c7bc72d0a333a76d5f00cdaf701c053-X";
+  let APIKEY = "FLWSECK-767b9baea608e14a8a840d1cee54e619-X";
 
   var data =  JSON.stringify({
     "account_bank": bank_code,
@@ -121,7 +121,7 @@ console.log(subaccount_id)
       account_status: newUser.account_status,
       token: generateToken(newUser._id),
     }).catch(function (error) {
-      res.status(400).json({message: error.data});
+      res.status(400).json({message: error.message});
     });
     
   }
