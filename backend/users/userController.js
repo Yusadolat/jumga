@@ -71,7 +71,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }else{
   //Create Subaccount
-  let APIKEY = "FLWSECK-767b9baea608e14a8a840d1cee54e619-X";
 
   var data =  JSON.stringify({
     "account_bank": bank_code,
@@ -87,7 +86,7 @@ const registerUser = asyncHandler(async (req, res) => {
     method: 'post',
     url: 'https://api.flutterwave.com/v3/subaccounts',
     headers: { 
-      'Authorization': `Bearer ${APIKEY}`, 
+      'Authorization': `Bearer ${process.env.LIVE_API_KEY}`, 
       'Content-Type': 'application/json'
     },
     data : data
