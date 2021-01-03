@@ -27,6 +27,10 @@ export const HeaderDiv = styled.header`
         }
     }
 
+    .right-side{
+        display: flex;
+        align-items: center;
+    }
     
 `
 export const LinkButton = styled(Link)`

@@ -26,7 +26,7 @@ const FeaturedDiv = styled.div`
 type Product  = {
     category: string;
     description: string;
-    id: number;
+    _id: string;
     image: string;
     title: string;
     price: number;
@@ -38,6 +38,7 @@ type Props = {
 }
 
 const FeaturedProducts:React.FC<Props> = ({products, title}) =>  {
+
     return (
         <Container>
             <HeaderTitle title={title}/>

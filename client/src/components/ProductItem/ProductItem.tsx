@@ -66,14 +66,14 @@ const ProductDiv = styled.div`
 interface Props {
     category: string;
     description: string;
-    id: number;
+    _id: string;
     image: string;
     title: string;
     price: number;
 }
 
 
-const ProductItem:React.FC<Props> = ({ price, title, id, image}) => {
+const ProductItem:React.FC<Props> = ({ price, title, _id, image}) => {
     return (
         <ProductDiv>
             <div className="img-wrapper">
@@ -81,7 +81,7 @@ const ProductItem:React.FC<Props> = ({ price, title, id, image}) => {
             </div>
             <h3 className="title">{title.length > 50 ? title.substring(0, 50) + "..." : title}</h3>
             <h4 className="price">$ {price}</h4>
-            <Link to={`product/${id}`} className="btn">View Product</Link>
+            <Link to={`product/${_id}`} className="btn">View Product</Link>
         </ProductDiv>
     )
 }
