@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userExists) {
     res.status(400).send({message: "User already exists"});
   }
-  
+
   if (bank_name === ""){
     const newUser = await User.create({
       fullname,
@@ -63,7 +63,8 @@ const registerUser = asyncHandler(async (req, res) => {
         email: newUser.email,
         isMerchant: newUser.isMerchant,
         token: generateToken(newUser._id),
-      });
+      })
+    
     } else {
       res.status(400).send({message: error})
       
@@ -86,7 +87,7 @@ const registerUser = asyncHandler(async (req, res) => {
     method: 'post',
     url: 'https://api.flutterwave.com/v3/subaccounts',
     headers: { 
-      'Authorization': `Bearer ${process.env.LIVE_API_KEY}`, 
+      'Authorization': `Bearer ${APIKEY}`, 
       'Content-Type': 'application/json'
     },
     data : data
@@ -119,14 +120,15 @@ console.log(subaccount_id)
       isMerchant: newUser.isMerchant,
       account_status: newUser.account_status,
       token: generateToken(newUser._id),
+    }).catch(function (error) {
+      res.status(400).json({message: error.data});
     });
-  } else {
-    res.status(400).send({message: error})
     
   }
   })
   .catch(function (error) {
-    res.status(400).json({message: error});
+    //console.log(error.response.data.message)
+    res.status(400).send({message: error.response.data.message});
   });
 }
   
