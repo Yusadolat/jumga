@@ -86,7 +86,7 @@ const registerUser = asyncHandler(async (req, res) => {
     method: 'post',
     url: 'https://api.flutterwave.com/v3/subaccounts',
     headers: { 
-      'Authorization': `Bearer ${APIKEY}`, 
+      'Authorization': `Bearer ${process.env.LIVE_API_KEY}`, 
       'Content-Type': 'application/json'
     },
     data : data
