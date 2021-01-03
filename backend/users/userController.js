@@ -40,8 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400).send({message: error});
-    throw new Error("User already exists");
+    res.status(400).send({message: "User already exists"});
   }
   
   if (bank_name === ""){
