@@ -11,6 +11,7 @@ align-items: center;
 form {
     font-family: "Be Vietnam", sans-serif;
     width: 600px;
+    margin-bottom: 300px;
     box-shadow: 1px 4px 30px 2px rgba(0,0,0,0.015);
     text-align: center;
     background: var(--light);

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory, withRouter } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from './features/products/productsSlice'
 
@@ -24,14 +24,13 @@ import './App.css';
 
 
 const App: React.FC = () => {
+  const [lastAccessedProduct, setLastAccessedProduct] = useState<string>("")
+
   const dispatch = useDispatch();
-  let history = useHistory();
-  const {products, user } = useSelector((state: any) => state);
-  console.log({products, user})
+  const {user } = useSelector((state: any) => state);
   const {isMerchant} = user.user;
   const { isSignedIn } = user;
 
-  console.log(isMerchant, isSignedIn);
   useEffect(() => {
     dispatch(fetchProducts());
   // eslint-disable-next-line
@@ -43,16 +42,15 @@ const App: React.FC = () => {
       <ScrollToTop />
       <Switch>
         <Route exact path="/" component={Homepage} />
-        <Route exact path="/product/:id" component={ProductPage} />
-        <Route path="/login" render={props => {
+        <Route exact path="/product/:id" render={((props:any) => <ProductPage {...props} setLastAccessedProduct={setLastAccessedProduct} />)} />
+        <Route path="/login" render={(props:any) => {
           if(isSignedIn && !isMerchant){
             return <Redirect to="/" />
           }else{
-            return <Login />
+            return <Login {...props} lastAccessedProduct={lastAccessedProduct}/>
           }
-        }
-        } component={Login} />
-        <Route path="/signup" component={Signup} />
+        }}/>
+        <Route path="/signup" render={((props:any) => <Signup {...props} lastAccessedProduct={lastAccessedProduct} />)}/>
 
 
 

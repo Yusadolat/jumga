@@ -16,7 +16,7 @@ type Inputs = {
     password: string,
   };
  
-const Login = () => {
+const Login = ({lastAccessedProduct}:any) => {
     const [error, setError] = useState("");
 
     const history = useHistory();
@@ -26,7 +26,6 @@ const Login = () => {
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
-        console.log(data);
         fetch("https://jumga.herokuapp.com/api/v1/users/login", {
             method: "POST",
             headers: {
@@ -36,13 +35,16 @@ const Login = () => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            console.log(json);
             dispatch(addUser(json));
-            history.goBack();            
+            if(lastAccessedProduct){
+                history.push(`/product/${lastAccessedProduct}`)
+            }else{
+                history.goBack();  
+            }
+                      
         })
         .catch((err:any) => {
             setError(err.message);
-            console.log({err})
         })
     }
 

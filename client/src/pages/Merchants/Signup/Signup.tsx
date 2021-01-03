@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form";
-import {useDispatch} from 'react-redux';
-import { Link } from 'react-router-dom';
+import {useDispatch,} from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import {Container} from '../../../styles/GlobalStyles'
 import Logo from '../../../assets/logo.svg'
 // STLES
@@ -16,7 +16,7 @@ type Inputs = {
     country: string,
     phone_number: number,
     business_name: string,
-    bank_name: string,
+    bank_code: string,
     account_number: number,
   };
 
@@ -24,47 +24,59 @@ type Inputs = {
   
 const Signup = () => {
     const [banks, setBanks] = useState([]);
+    const [error, setError] = useState("");
+    const [bankName, setBankName] = useState("");
+    const [loading, setLoading] = useState(false);
     
+    const history = useHistory();
     const dispatch = useDispatch();
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
 
-        const newMerchant = {...data, isMerchant: true, bank_code: "123"}
-        console.log(newMerchant);
-        // const test = {
-        //     "fullname": "Yusuf Adeyemo",
-        //     "email": "yusadolat@gmail.com",
-        //     "phone_number": "08160016822",
-        //     "country": "NG",
-        //     "business_name": "ProntoVille LLC",
-        //     "bank_name": "Access Bank",
-        //     "bank_code": "044",
-        //     "account_number": "0690000031",
-        //     "password": "Islam1234",
-        //     "isMerchant": true
-        // }
-        dispatch(addUser(newMerchant));
+        const newMerchant = {...data, isMerchant: true, bank_name: bankName};
+
+        console.log({dataToBeSent: newMerchant});
+        
+        fetch("https://jumga.herokuapp.com/api/v1/users/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newMerchant)
+        })
+        .then((res:any) => res.json())
+        .then((json) => {
+            console.log({response: json});
+            dispatch(addUser(json));
+            history.push(`/verify`);
+        })
+        .catch((err) => setError(err.message))
     }
 
 
     const handleChange = (e: any) => {
+        
         const val = e.target.value;
-        const API_KEY = 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X'
-        // FLWSECK_TEST-8c7bc72d0a333a76d5f00cdaf701c053-X
-        console.log(val)
         if(val){
-            fetch(`https://api.flutterwave.com/v3/banks/${val}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${API_KEY}`
+            setLoading(true);
+            fetch(`https://jumga.herokuapp.com/api/v1/banks/${val}`)
+            .then((res) => res.json())
+            .then((json) => {
+                if(json.status === "success"){
+                    setBanks(json.data)
+                }else{
+                    setError(json.message);
                 }
             })
-            .then((res) => res.json())
-            .then((data) => {
-                setBanks(data);
-            })
-            .catch((err) => console.log(err.message))
+            .catch((err) => setError(err.message));
+            setLoading(false);
         }
+    }
+
+    const handleBank = (e:any) => {
+        const selectedBank:any = banks?.find((bank:any) => bank.code === e.target.value);
+
+        setBankName(selectedBank.name);
     }
     return (
         <Container>
@@ -78,12 +90,6 @@ const Signup = () => {
                     <input type="text" name="fullname" placeholder="Enter your full name" ref={register({ required: true })} />
                     {errors.fullname && <span>This field is required</span>}
 
-                    <input type="email" name="email" placeholder="Enter your email" ref={register({ required: true })} />
-                    {errors.email && <span>This field is required</span>}
-                    
-                    <input type="tel" name="phone_number" placeholder="Phone Number" ref={register({ required: true })} />
-                    {errors.phone_number && <span>This field is required</span>}
-                    
                     <select name="country" onChange={(e) => handleChange(e)} ref={register({ required: true })}>
                         <option value="">Select your country</option>
                         <option value="NG">Nigeria</option>
@@ -93,14 +99,21 @@ const Signup = () => {
                     </select>
                     {errors.country && <span>This field is required</span>}
 
+                    <input type="email" name="email" placeholder="Enter your email" ref={register({ required: true })} />
+                    {errors.email && <span>This field is required</span>}
+                    
+                    <input type="tel" name="phone_number" placeholder="Phone Number" ref={register({ required: true })} />
+                    {errors.phone_number && <span>This field is required</span>}
+                    
+
                     <input type="text" name="business_name" placeholder="Your Business Name" ref={register({ required: true })} />
                     {errors.business_name && <span>This field is required</span>}
                    
-                    {/* <select name="bank_name" ref={register({ required: true })}>
-                        <option value="">Select your Bank</option>
-                        {banks?.map((bank:any) => <option value={bank.code}>{bank.name}</option>)}
+                    <select name="bank_code" onChange={(e:any) => handleBank(e)} ref={register({ required: true })}>
+                        <option value="">{loading ? "Fetching banks..." : !loading && banks.length ? "Select your Bank" : !loading && !banks.length ? "Select a country to be able to select a bank" : <></> }</option>
+                        {banks?.map((bank:any) => <option key={bank.id} value={bank.code}>{bank.name}</option>)}
                     </select>
-                    {errors.bank_name && <span>Select a country to be able to choose a bank</span>} */}
+                    {errors.bank_code && <span>Select a country to be able to choose a bank</span>}
 
                     <input type="number" name="account_number" placeholder="Account Number" ref={register({ required: true })} />
                     {errors.account_number && <span>This field is required</span>}
@@ -108,6 +121,8 @@ const Signup = () => {
                     <input type="password" name="password" placeholder="Password" ref={register({ required: true })} />
                     {errors.password && <span>This field is required</span>}
                     
+                    {error ? <p>{error}</p> : <></>}
+
                     <button>Submit</button>
                     <p>Already have an account? <Link to="/login">Login</Link> </p>
                 </form>

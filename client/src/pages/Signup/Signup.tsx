@@ -23,7 +23,7 @@ type Inputs = {
     isMerchant: boolean
   };
  
-const Signup = () => {
+const Signup = ({lastAccessedProduct}:any) => {
     const [error, setError] = useState<string>("");
     const dispatch = useDispatch();
     const history = useHistory();
@@ -40,7 +40,6 @@ const Signup = () => {
             bank_code: "",
             account_number: "",
         }
-        console.log(newUser);
         fetch("https://jumga.herokuapp.com/api/v1/users/register", {
             method: "POST",
             headers: {
@@ -50,9 +49,12 @@ const Signup = () => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            console.log(json);
             dispatch(addUser(json));
-            history.goBack();
+            if(lastAccessedProduct){
+                history.push(`/product/${lastAccessedProduct}`)
+            }else{
+                history.goBack();  
+            }
         })
         .catch((err) => setError(err.message))
         

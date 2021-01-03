@@ -70,6 +70,7 @@ const ProductPage:React.FC = (props: any) => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const params:any = useParams();
+    const setLastAccessedProduct = props.setLastAccessedProduct;
     
     const id = params.id;
 
@@ -95,16 +96,18 @@ const ProductPage:React.FC = (props: any) => {
         subaccounts: [
             {
               id: "RS_A8EB7D4D9C66C0B1C75014EE67D4D663",
-              transaction_split_ratio: 2,
+              transaction_charge_type: 'percentage',
+              transaction_charge: 0.9
             },
             {
               id: "RS_CF5B2A15E2CCD39F44E7774376EAE5C5",
-              transaction_split_ratio: 2,
+              transaction_charge_type: 'percentage',
+              transaction_charge: 0.9
             },
         ],
         customizations: {
           title: business_name,
-          description: 'Payment for store verification',
+          description: `Payment for store verification`,
           logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
         },
       };
@@ -138,18 +141,20 @@ const ProductPage:React.FC = (props: any) => {
     )}
 
     useEffect(() => {
-
-        console.log(id);
         fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
             setProduct(data);
             setLoading(false);
+            setLastAccessedProduct(id);
         })
         .catch((err) => {
             setError(err.message);
             setLoading(false);        
-        })
+        });
+
+
+        // eslint-disable-next-line
     }, [])
 
     return (
