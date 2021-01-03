@@ -30,7 +30,7 @@ const Signup = () => {
     const onSubmit = (data:Inputs) => {
 
         const newMerchant = {...data, isMerchant: true, bank_code: "123"}
-
+        console.log(newMerchant);
         // const test = {
         //     "fullname": "Yusuf Adeyemo",
         //     "email": "yusadolat@gmail.com",
@@ -96,11 +96,11 @@ const Signup = () => {
                     <input type="text" name="business_name" placeholder="Your Business Name" ref={register({ required: true })} />
                     {errors.business_name && <span>This field is required</span>}
                    
-                    <select name="bank_name" ref={register({ required: true })}>
+                    {/* <select name="bank_name" ref={register({ required: true })}>
                         <option value="">Select your Bank</option>
                         {banks?.map((bank:any) => <option value={bank.code}>{bank.name}</option>)}
                     </select>
-                    {errors.bank_name && <span>Select a country to be able to choose a bank</span>}
+                    {errors.bank_name && <span>Select a country to be able to choose a bank</span>} */}
 
                     <input type="number" name="account_number" placeholder="Account Number" ref={register({ required: true })} />
                     {errors.account_number && <span>This field is required</span>}

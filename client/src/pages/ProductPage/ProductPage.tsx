@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
 import {withRouter, useParams, Link} from 'react-router-dom';
@@ -66,13 +66,14 @@ const MainContainer = styled(Container)`
 
 
 const ProductPage:React.FC = (props: any) => {
+    const [product, setProduct] = useState<any>([]);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
     const params:any = useParams();
     
     const id = params.id;
 
-    const {products, user } = useSelector((state: any) => state);
-    const productsArray = products.products;
-    const product = productsArray.find((item:any) => item._id === id);
+    const { user } = useSelector((state: any) => state);
     const history = props.history;
 
     const {isMerchant} = user.user;
@@ -108,33 +109,57 @@ const ProductPage:React.FC = (props: any) => {
         },
       };
     
-      const fwConfig:any = {
-        ...config,
-        text: 'Pay with Flutterwave!',
-        callback: (response:any) => {
-           console.log(response);
-          closePaymentModal() // this will close the modal programmatically
-        },
-        onClose: () => {},
-      };
-    
-      let content;
-      if(isSignedIn){
+    const fwConfig:any = {
+    ...config,
+    text: 'Pay with Flutterwave!',
+    callback: (response:any) => {
+        console.log(response);
+        closePaymentModal() // this will close the modal programmatically
+    },
+    onClose: () => {},
+    };
+
+    let content;
+    if(isSignedIn){
         if(isMerchant){
             content = <p>You need to sign in as a customer to be able to purchase Item</p>
         }else{
             content = <FlutterWaveButton {...fwConfig} />
         }
-      }else{
-        content = <Link to="/login">Login to Checkout</Link>
-      }
+    }else{
+    content = (
+    <>
+        <Link to="/login">Login </Link>
+         <span style={{paddingRight: 10, paddingLeft: 10}}> or </span>
+        <Link to="/signup">Signup </Link>
+        <span style={{paddingRight: 10, paddingLeft: 10}}>to Checkout</span>
+        
+    </>
+    )}
+
+    useEffect(() => {
+
+        console.log(id);
+        fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+            setProduct(data);
+            setLoading(false);
+        })
+        .catch((err) => {
+            setError(err.message);
+            setLoading(false);        
+        })
+    }, [])
 
     return (
         <>
             <Header />
             <MainContainer>
                 <BackButton onClick={() => history.goBack()}> &lt; Back</BackButton>
-                <div className="row">
+                {loading ? <p>Loading...</p> : <></>}
+                {Object.entries(product).length ? (
+                    <div className="row">
                     <div className="col">
                         <img src={product?.image} alt="Product Item"/>
                     </div>
@@ -146,9 +171,9 @@ const ProductPage:React.FC = (props: any) => {
                             {content}
                         </div>
                     </div>
-                </div>
-                
-               
+                    </div>
+                ) : <></>}
+                    {error ? <p>{error}</p> : <></>}               
             </MainContainer>
         </>
     )

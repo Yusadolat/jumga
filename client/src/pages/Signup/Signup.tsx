@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useDispatch} from 'react-redux';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg'
@@ -26,7 +26,12 @@ type Inputs = {
 const Signup = () => {
     const [error, setError] = useState<string>("");
     const dispatch = useDispatch();
+    const history = useHistory();
+
+
     const { register, handleSubmit, errors } = useForm<Inputs>();
+
+
     const onSubmit = (data:Inputs) => {
         const newUser = {
             ...data,
@@ -47,6 +52,7 @@ const Signup = () => {
         .then((json) => {
             console.log(json);
             dispatch(addUser(json));
+            history.goBack();
         })
         .catch((err) => setError(err.message))
         

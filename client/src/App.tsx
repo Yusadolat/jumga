@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect, useHistory, withRouter } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from './features/products/productsSlice'
 
@@ -25,6 +25,7 @@ import './App.css';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  let history = useHistory();
   const {products, user } = useSelector((state: any) => state);
   console.log({products, user})
   const {isMerchant} = user.user;
@@ -37,14 +38,20 @@ const App: React.FC = () => {
   }, []);
 
 
-
   return (
     <Router>
       <ScrollToTop />
       <Switch>
         <Route exact path="/" component={Homepage} />
         <Route exact path="/product/:id" component={ProductPage} />
-        <Route path="/login" component={Login} />
+        <Route path="/login" render={props => {
+          if(isSignedIn && !isMerchant){
+            return <Redirect to="/" />
+          }else{
+            return <Login />
+          }
+        }
+        } component={Login} />
         <Route path="/signup" component={Signup} />
 
 

@@ -7,27 +7,27 @@ import Logo from '../../assets/logo.svg'
 
 function Header() {
     const user = useSelector((state: any) => state.user);
-    // const {isSignedIn, loading } = user;
     const {isSignedIn } = user;
-    const {isMerchant} = user.user;
+    const {isMerchant, email} = user.user;
 
     let buttons;
     if (isSignedIn && isMerchant) {
         buttons = (
-            <div>
+            <div className="right-side">
                 <LinkButton className="merchants" to="/dashboard">My Store</LinkButton>
             </div>
         )
     }else if( isSignedIn && !isMerchant){
         buttons = (
-            <div>
+            <div className="right-side">
+                <p>Welcome, {email}</p>
                 <LinkButton className="merchants" to="/dashboard">My Orders</LinkButton>
                 <LinkButton to="/login">Logout</LinkButton>
             </div>
         )
     }else{
         buttons = (
-            <div>
+            <div className="right-side">
                 <LinkButton className="merchants" to="/merchant/login">For Merchant</LinkButton>
                 <LinkButton to="/login">Login</LinkButton>
             </div>

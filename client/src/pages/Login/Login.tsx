@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg';
@@ -18,6 +19,7 @@ type Inputs = {
 const Login = () => {
     const [error, setError] = useState("");
 
+    const history = useHistory();
     const dispatch = useDispatch()
 
 
@@ -36,12 +38,12 @@ const Login = () => {
         .then((json) => {
             console.log(json);
             dispatch(addUser(json));
+            history.goBack();            
         })
         .catch((err:any) => {
             setError(err.message);
             console.log({err})
         })
-        
     }
 
     return (
