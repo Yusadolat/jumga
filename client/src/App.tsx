@@ -28,7 +28,7 @@ const App: React.FC = () => {
 
   const dispatch = useDispatch();
   const {user } = useSelector((state: any) => state);
-  const {isMerchant} = user.user;
+  const { isMerchant, account_status } = user.user;
   const { isSignedIn } = user;
 
   useEffect(() => {
@@ -59,14 +59,20 @@ const App: React.FC = () => {
         <Route path="/verify" component={Verify} />
 
         <Route path="/dashboard" render={props =>  {
-          if(isSignedIn){
-            return <Dashboard />
-          }else if(!isSignedIn && isMerchant){
-            return <Redirect to="/merchant/login" />
-          }else if(!isSignedIn && !isMerchant) {
-            return <Redirect to={{
-              pathname: "/login",
-            }} />
+          if(isMerchant){
+              if(isSignedIn && account_status === true){
+                return <Dashboard />
+              }else if(isSignedIn && account_status === false){
+                return <Redirect to="/verify" />
+              }else{
+                return <Redirect to="/merchant/login" />
+              }
+          }else{
+              if(isSignedIn){
+                return <Dashboard />
+              }else{
+                return <Redirect to="/login" />
+              }
           }
         }} />
       </Switch>
