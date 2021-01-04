@@ -18,8 +18,8 @@ const loginUser = asyncHandler(async (req, res) => {
         token: generateToken(user._id),
       })
     } else {
-      res.status(401)
-      throw new Error('Invalid email or password')
+      res.status(401).send({status: "Failed", message:error.message})
+      
     }
   })
 
@@ -40,7 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400).send({message: "User already exists"});
+    res.status(400).send({status: "Failed", message: "User already exists"});
   }
 
   if (bank_name === ""){
@@ -66,7 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
       })
     
     } else {
-      res.status(400).send({message: error})
+      res.status(400).send({status: "Failed", message: error})
       
     }
   }else{
@@ -121,14 +121,14 @@ console.log(subaccount_id)
       split_value: newUser.split_value,
       token: generateToken(newUser._id),
     }).catch(function (error) {
-      res.status(400).json({message: error.message});
+      res.status(400).json({status: "Failed", message: error.message});
     });
     
   }
   })
   .catch(function (error) {
     //console.log(error.response.data.message)
-    res.status(400).send({message: error.response.data.message});
+    res.status(400).send({status: "Failed", message: error.response.data.message});
   });
 }
   
