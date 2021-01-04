@@ -13,9 +13,10 @@ connectDB();
 const app = express();
 
 
-app.use(cors())
+
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Wowza, API is running....");
