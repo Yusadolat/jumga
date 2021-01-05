@@ -1,7 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {Link, useHistory} from 'react-router-dom';
 import {useSelector}  from 'react-redux';
 
+import {logoutUser} from '../../features/user/userSlice'
 import { HeaderDiv, LinkButton } from './Header.styles';
 import Logo from '../../assets/logo.svg'
 
@@ -10,6 +12,12 @@ function Header() {
     const {isSignedIn } = user;
     const {isMerchant, email} = user.user;
 
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const HandleLogout = () => {
+        dispatch(logoutUser(""));
+        history.push("/")
+    }
     let buttons;
     if (isSignedIn && isMerchant) {
         buttons = (
@@ -22,13 +30,13 @@ function Header() {
             <div className="right-side">
                 <p>Welcome, {email}</p>
                 <LinkButton className="merchants" to="/dashboard">My Orders</LinkButton>
-                <LinkButton to="/login">Logout</LinkButton>
+                <LinkButton to="/" onClick={HandleLogout}>Logout</LinkButton>
             </div>
         )
     }else{
         buttons = (
             <div className="right-side">
-                <LinkButton className="merchants" to="/merchant/login">For Merchant</LinkButton>
+                <LinkButton className="merchants" to="/merchant/signup">Merchant Signup</LinkButton>
                 <LinkButton to="/login">Login</LinkButton>
             </div>
         )

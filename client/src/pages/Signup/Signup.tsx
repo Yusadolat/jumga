@@ -49,12 +49,17 @@ const Signup = ({lastAccessedProduct}:any) => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            dispatch(addUser(json));
-            if(lastAccessedProduct){
-                history.push(`/product/${lastAccessedProduct}`)
+            if(json.status === "Failed"){
+                setError(json.message)
             }else{
-                history.goBack();  
+                dispatch(addUser(json));
+                if(lastAccessedProduct){
+                    history.push(`/product/${lastAccessedProduct}`)
+                }else{
+                    history.goBack();  
+                }
             }
+           
         })
         .catch((err) => setError(err.message))
         

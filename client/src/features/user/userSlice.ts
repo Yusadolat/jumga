@@ -1,16 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface UserProps {
+    _id: string;
     fullname: string;
     email: string;
     phone_number: string;
     country: string;
     business_name: string;
-    bank_name: string;
-    bank_code: string;
-    account_number: string;
-    password: string;
     isMerchant: boolean;
+    token: string;
+    account_status: boolean;
   }
 interface User {
   user: UserProps;
@@ -18,16 +17,15 @@ interface User {
 }
 const initialState:User = {
   user: {
+    _id: "",
     fullname: "",
     email: "",
     phone_number: "",
     country: "",
     business_name: "",
-    bank_name: "",
-    bank_code: "",
-    account_number: "",
-    password: "",
-    isMerchant: false
+    isMerchant: false,
+    token: "",
+    account_status: false,
   },
   isSignedIn: false
 }
@@ -42,11 +40,15 @@ const initialState:User = {
         addUser(state, action) {
           state.user = action.payload;
           state.isSignedIn = true;
+        },
+        logoutUser(state:any, action) {
+          state.user = {...initialState};
+          state.isSignedIn = false;
         }
       },
       
   })
 
-export const { addUser } = userSlice.actions;
+export const { addUser, logoutUser } = userSlice.actions;
   
 export default userSlice.reducer;
