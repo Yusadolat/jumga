@@ -46,9 +46,12 @@ const Signup = () => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            console.log({response: json});
-            dispatch(addUser(json));
-            history.push(`/verify`);
+            if(json.status === "Failed"){
+                setError(json.message);
+            }else{
+                dispatch(addUser(json));
+                history.push(`/verify`);
+            }           
         })
         .catch((err) => setError(err.message))
     }

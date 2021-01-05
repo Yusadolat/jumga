@@ -35,6 +35,7 @@ const Login = ({lastAccessedProduct}:any) => {
         })
         .then((res:any) => res.json())
         .then((json) => {
+            console.log(json);
             dispatch(addUser(json));
             if(lastAccessedProduct){
                 history.push(`/product/${lastAccessedProduct}`)

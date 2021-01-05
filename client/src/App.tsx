@@ -68,7 +68,7 @@ const App: React.FC = () => {
                 return <Redirect to="/merchant/login" />
               }
           }else{
-              if(isSignedIn){
+              if(isSignedIn){ 
                 return <Dashboard />
               }else{
                 return <Redirect to="/login" />

@@ -31,8 +31,14 @@ const productsSlice = createSlice({
             state.error = "";
           })
           .addCase(fetchProducts.fulfilled, (state, {payload}) => {
-            state.products = payload;
-            state.error = "";
+            if(typeof payload === undefined){
+              state.error = "Something went wrong with the request";
+            }
+            else {
+              state.products = payload;
+              state.error = "";
+            }
+            
             state.loading = false;
           })
           .addCase(fetchProducts.rejected, (state, {payload}) => {
