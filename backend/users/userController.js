@@ -18,7 +18,7 @@ const loginUser = asyncHandler(async (req, res) => {
         token: generateToken(user._id),
       })
     } else {
-      res.status(401).send({status: "Failed", message:error.message})
+      res.status(401).send({ message: "Incorrect Login Details" });
       
     }
   })
@@ -137,7 +137,7 @@ console.log(subaccount_id)
 
 const getUserById = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById()
   
     res.status(200).json({user})
     
