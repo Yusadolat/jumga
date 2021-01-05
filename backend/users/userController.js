@@ -18,7 +18,7 @@ const loginUser = asyncHandler(async (req, res) => {
         token: generateToken(user._id),
       })
     } else {
-      res.status(401).send({status: "Failed", message:error.message})
+      res.status(401).send({status: "Failed", message: "Incorrect Login Details" });
       
     }
   })
@@ -34,6 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
     bank_name,
     bank_code,
     account_number,
+    isMerchant
   } = req.body;
   
 
@@ -44,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   if (bank_name === ""){
-    const newUser = await User.create({
+    const freshUser = await User.create({
       fullname,
       email,
       password,
@@ -56,13 +57,13 @@ const registerUser = asyncHandler(async (req, res) => {
       account_number,
     });
   
-    if (newUser) {
+    if (freshUser) {
       res.status(201).json({
-        _id: newUser._id,
-        fullname: newUser.fullname,
-        email: newUser.email,
-        isMerchant: newUser.isMerchant,
-        token: generateToken(newUser._id),
+        _id: freshUser._id,
+        fullname: freshUser.fullname,
+        email: freshUser.email,
+        isMerchant: freshUser.isMerchant,
+        token: generateToken(freshUser._id),
       })
     
     } else {
@@ -110,17 +111,12 @@ console.log(subaccount_id)
     subaccount_id,
     isMerchant
   });
-
+console.log(newUser)
   if (newUser) {
     res.status(201).json({
-      _id: newUser._id,
-      fullname: newUser.fullname,
-      business_name: newUser.business_name,
-      email: newUser.email,
-      isMerchant: newUser.isMerchant,
-      account_status: newUser.account_status,
-      split_value: newUser.split_value,
+      
       token: generateToken(newUser._id),
+      data: newUser
     }).catch(function (error) {
       res.status(400).json({status: "Failed", message: error.message});
     });
@@ -129,7 +125,7 @@ console.log(subaccount_id)
   })
   .catch(function (error) {
     //console.log(error.response.data.message)
-    res.status(400).send({status: "Failed", message: error.response.data.message});
+    res.status(400).send({status: "Failed", message: error.message});
   });
 }
   
@@ -137,7 +133,7 @@ console.log(subaccount_id)
 
 const getUserById = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById()
   
     res.status(200).json({user})
     
