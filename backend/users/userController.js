@@ -34,6 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
     bank_name,
     bank_code,
     account_number,
+    isMerchant
   } = req.body;
   
 
