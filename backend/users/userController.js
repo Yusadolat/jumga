@@ -107,7 +107,8 @@ console.log(subaccount_id)
     bank_name,
     bank_code,
     account_number,
-    subaccount_id
+    subaccount_id,
+    isMerchant
   });
 
   if (newUser) {
