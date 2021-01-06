@@ -1,5 +1,4 @@
 import asyncHandler from "express-async-handler";
-import { body, validationResult } from 'express-validator';
 import axios from 'axios'
 import generateToken from '../utils/generateToken.js'
 import User from "../users/userModel.js";
@@ -10,12 +9,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email })
   
     if (user && (await user.matchPassword(password))) {
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: generateToken(user._id),
+      res.json({ status: "Sucess", user
       })
     } else {
       res.status(401).send({status: "Failed", message: "Incorrect Login Details" });
