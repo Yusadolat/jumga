@@ -9,7 +9,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email })
   
     if (user && (await user.matchPassword(password))) {
-      res.json({ status: "Sucess", user
+      res.json({ status: "Sucess", user, token: generateToken(user._id) 
       })
     } else {
       res.status(401).send({status: "Failed", message: "Incorrect Login Details" });
@@ -33,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
   
 
   const userExists = await User.findOne({ email });
-
   if (userExists) {
     res.status(400).send({status: "Failed", message: "User already exists"});
   }
@@ -107,8 +106,7 @@ console.log(subaccount_id)
   });
 console.log(newUser)
   if (newUser) {
-    res.status(201).json({
-      
+    res.status(201).json({  
       token: generateToken(newUser._id),
       data: newUser
     }).catch(function (error) {
