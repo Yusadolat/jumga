@@ -18,7 +18,7 @@ type Inputs = {
  
 const Login = ({lastAccessedProduct}:any) => {
     const [error, setError] = useState("");
-
+    const [loading, setLoading] = useState<boolean>(false);
     const history = useHistory();
     const dispatch = useDispatch()
 
@@ -26,6 +26,8 @@ const Login = ({lastAccessedProduct}:any) => {
 
     const { register, handleSubmit, errors } = useForm<Inputs>();
     const onSubmit = (data:Inputs) => {
+        setError("");
+        setLoading(true);
         fetch("https://jumga.herokuapp.com/api/v1/users/login", {
             method: "POST",
             headers: {
@@ -35,16 +37,27 @@ const Login = ({lastAccessedProduct}:any) => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            dispatch(addUser(json));
-            if(lastAccessedProduct){
-                history.push(`/product/${lastAccessedProduct}`)
+            if(json.status === "Failed"){
+                setError(json.message);
             }else{
-                history.goBack();  
+                console.log(json);
+                dispatch(addUser(json));
+                if(json.isMerchant){
+                    history.push("/dashboard");
+                }else{
+                    if(lastAccessedProduct){
+                        history.push(`/product/${lastAccessedProduct}`)
+                    }else{
+                        history.goBack();  
+                    }
+                } 
+                setLoading(false);
             }
-                      
+            setLoading(false);                
         })
         .catch((err:any) => {
             setError(err.message);
+            setLoading(false);
         })
     }
 
@@ -63,9 +76,10 @@ const Login = ({lastAccessedProduct}:any) => {
                     {errors.password && <span>This field is required</span>}
                     
                     {error && <p>{error}</p>}
-                    <button>Submit</button>
+                    <button disabled={loading ? true : false}>{loading ? "Submitting..." : "Login"}</button>
 
-                    <p>Don't have an account? <Link to="/signup">Sign up</Link> </p>
+                    <p>Don't have an account? </p>
+                    <p>Sign up as a <Link to="/signup">Customer</Link> or as a <Link to="/merchant/signup">Merchant</Link></p>
                 </form>
             </FormContainer>
         </Container>

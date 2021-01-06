@@ -11,7 +11,6 @@ import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 
 // MERCHANT
-import MerchantLogin from './pages/Merchants/Login/Login';
 import MerchantSignup from './pages/Merchants/Signup/Signup'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Verify from './pages/Merchants/Verify/Verify';
@@ -36,6 +35,7 @@ const App: React.FC = () => {
   // eslint-disable-next-line
   }, []);
 
+  console.log(user)
 
   return (
     <Router>
@@ -53,10 +53,18 @@ const App: React.FC = () => {
         <Route path="/signup" render={((props:any) => <Signup {...props} lastAccessedProduct={lastAccessedProduct} />)}/>
 
 
-
-        <Route path="/merchant/login" component={MerchantLogin} />
         <Route path="/merchant/signup" component={MerchantSignup} />
-        <Route path="/verify" component={Verify} />
+        <Route path="/verify" render={(props) => {
+          if(!isSignedIn){
+            return <Redirect to="/login" />
+          }else{
+            if(isMerchant && account_status === false){
+              return <Verify />
+            }else if(isMerchant && account_status === true){
+              return <Redirect to="/dashboard" />
+            }
+          }
+        }} />
 
         <Route path="/dashboard" render={props =>  {
           if(isMerchant){
@@ -68,7 +76,7 @@ const App: React.FC = () => {
                 return <Redirect to="/merchant/login" />
               }
           }else{
-              if(isSignedIn){
+              if(isSignedIn){ 
                 return <Dashboard />
               }else{
                 return <Redirect to="/login" />

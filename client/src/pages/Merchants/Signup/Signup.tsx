@@ -46,9 +46,18 @@ const Signup = () => {
         })
         .then((res:any) => res.json())
         .then((json) => {
-            console.log({response: json});
-            dispatch(addUser(json));
-            history.push(`/verify`);
+            const {token, data} = json;
+            const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = data;
+            const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
+            // split_value: 0.097
+            // subaccount_id: "RS_F5DAB654CFB2E9491243404CAD9198F0"
+            console.log(newUser);
+            if(json.status === "Failed"){
+                setError(json.message);
+            }else{
+                dispatch(addUser(newUser));
+                history.push(`/verify`);
+            }           
         })
         .catch((err) => setError(err.message))
     }

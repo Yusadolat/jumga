@@ -11,10 +11,17 @@ const Wrapper = styled.div`
     margin: 20px auto;
     padding: 30px;
     text-align: center;
+
+    button {
+      font-size: 20px;
+      padding: 10px 40px;
+      background: #12f3f3;
+      color: #000;
+    }
 `
 function Verify() {
     const  user = useSelector((state:any) => state.user);
-    const {business_name, email, fullname, phone_number} = user.user;
+    const {business_name, email, phone_number } = user.user;
 
 
     const config = {
@@ -26,10 +33,10 @@ function Verify() {
         customer: {
           email,
           phonenumber:  phone_number,
-          name: fullname,
+          name: business_name,
         },
         customizations: {
-          title: business_name,
+          title: "Jumga",
           description: 'Payment for store verification',
           logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
         },
@@ -37,7 +44,7 @@ function Verify() {
     
       const fwConfig:any = {
         ...config,
-        text: 'Pay with Flutterwave!',
+        text: 'Verify Store',
         callback: (response:any) => {
            console.log(response);
           closePaymentModal() // this will close the modal programmatically
