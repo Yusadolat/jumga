@@ -41,16 +41,24 @@ const Login = ({lastAccessedProduct}:any) => {
                 setError(json.message);
             }else{
                 console.log(json);
-                dispatch(addUser(json));
-                if(json.isMerchant){
-                    history.push("/dashboard");
-                }else{
-                    if(lastAccessedProduct){
-                        history.push(`/product/${lastAccessedProduct}`)
+                const {token, user, status} = json;
+                const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = user;
+                const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
+                if(status === "Sucess"){
+                    dispatch(addUser(newUser));
+                    if(user.isMerchant){
+                        history.push("/dashboard");
                     }else{
-                        history.goBack();  
-                    }
-                } 
+                        if(lastAccessedProduct){
+                            history.push(`/product/${lastAccessedProduct}`)
+                        }else{
+                            history.goBack();  
+                        }
+                    } 
+                }else{
+                    setError(json.message);
+                }
+               
                 setLoading(false);
             }
             setLoading(false);                
