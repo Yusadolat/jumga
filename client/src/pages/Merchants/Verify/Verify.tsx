@@ -1,9 +1,11 @@
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
 
 import styled from 'styled-components';
 
+import {addUser} from '../../../features/user/userSlice'
 import {Container} from '../../../styles/GlobalStyles'
 
 const Wrapper = styled.div`
@@ -20,10 +22,38 @@ const Wrapper = styled.div`
     }
 `
 function Verify() {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     const  user = useSelector((state:any) => state.user);
-    const {business_name, email, phone_number } = user.user;
+    const {business_name, email, phone_number, _id, token } = user.user;
 
+    console.log(user.user);
 
+    const UpdateMerchant = () => {
+      fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
+              method: "PUT",
+              headers: {
+                "Authorization": "Bearer " + token
+              },
+              body: JSON.stringify({
+                "account_status": true
+                })
+            })
+            .then((res) => res.json())
+            .then((data) => {  
+              console.log(data);
+              const {token, updatedUser} = data;
+              const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
+              const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
+              dispatch(addUser(newUser));
+              setTimeout(() => history.push("/dashboard"), 2000)
+            })
+            .catch((err) => setError(err.message))
+    }
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
         tx_ref: Date.now(),
@@ -42,21 +72,33 @@ function Verify() {
         },
       };
     
-      const fwConfig:any = {
+  const fwConfig:any = {
         ...config,
         text: 'Verify Store',
         callback: (response:any) => {
-           console.log(response);
+          setLoading(true);
+          console.log({response, token, _id});
+          if(response.status === "successful"){
+            // Call the method to update user on payment success
+            UpdateMerchant();
+          }else{
+            setError(response.message);
+          }
+          setLoading(false);
           closePaymentModal() // this will close the modal programmatically
         },
-        onClose: () => {},
+        onClose: () => {
+          console.log("Closed");
+        },
       };
     
     return (
         <Container>
             <Wrapper>
                 <h3>Before Proceeding to your dashboard, you need to make a payment of $20. Click the button below to proceed!</h3>
-                <FlutterWaveButton {...fwConfig} />
+                {loading && !error ? <div>Processing Payment...</div> : <></>}
+                {error && !loading ? <div>{error}</div> : <></>}
+                {!loading ? <FlutterWaveButton onClick={() => setLoading(true)} {...fwConfig} /> : <></>}
             </Wrapper>
         </Container>
     )
