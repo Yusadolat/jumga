@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   res.send("Wowza, API is running....");
 });
 app.use('/api/v1/banks', bankRoutes)
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/users', cors(), userRoutes)
 app.use('/api/v1/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 
