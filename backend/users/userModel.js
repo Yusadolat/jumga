@@ -39,8 +39,11 @@ const userSchema = mongoose.Schema(
     },
     account_status: { type: Boolean, required: true, default: false },
     subaccount_id: { type: String },
+    dispatch_rider: { type: String },
     split_value: { type: Number, default: 0.097 },
+
   },
+
   {
     timestamps: true,
   }
@@ -58,6 +61,8 @@ userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+userSchema
 
 const User = mongoose.model("User", userSchema);
 
