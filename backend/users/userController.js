@@ -137,7 +137,7 @@ const updateUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) {
-      user.account_status = req.body.account_status || user.account_status;
+      user.account_status = req.body.account_status;
       const updatedUser = await user.save();
 
       res.json({
