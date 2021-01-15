@@ -33,27 +33,6 @@ function Verify() {
 
     console.log(user.user);
 
-    const UpdateMerchant = () => {
-      fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
-              method: "PUT",
-              headers: {
-                "Authorization": "Bearer " + token
-              },
-              body: JSON.stringify({
-                "account_status": true
-                })
-            })
-            .then((res) => res.json())
-            .then((data) => {  
-              console.log(data);
-              const {token, updatedUser} = data;
-              const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
-              const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
-              dispatch(addUser(newUser));
-              setTimeout(() => history.push("/dashboard"), 2000)
-            })
-            .catch((err) => setError(err.message))
-    }
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
         tx_ref: Date.now(),
@@ -72,26 +51,46 @@ function Verify() {
         },
       };
     
-  const fwConfig:any = {
+      const fwConfig:any = {
         ...config,
         text: 'Verify Store',
         callback: (response:any) => {
           setLoading(true);
           console.log({response, token, _id});
           if(response.status === "successful"){
-            // Call the method to update user on payment success
-            UpdateMerchant();
+            alert("Successful!");
           }else{
             setError(response.message);
           }
+         
           setLoading(false);
           closePaymentModal() // this will close the modal programmatically
         },
-        onClose: () => {
-          console.log("Closed");
-        },
+        onClose: () => {},
       };
     
+
+      const handleVerify = () => {
+        fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
+              method: "PUT",
+              headers: {
+                "Authorization": "Bearer " + token
+              },
+              body: JSON.stringify({
+                account_status: true
+                })
+            })
+            .then((res) => res.json())
+            .then((data) => {  
+              console.log(data);
+              const {token, updatedUser} = data;
+              const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
+              const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
+              dispatch(addUser(newUser));
+              setTimeout(() => history.push("/dashboard"), 2000)
+            })
+            .catch((err) => setError(err.message))
+      }
     return (
         <Container>
             <Wrapper>
@@ -99,6 +98,9 @@ function Verify() {
                 {loading && !error ? <div>Processing Payment...</div> : <></>}
                 {error && !loading ? <div>{error}</div> : <></>}
                 {!loading ? <FlutterWaveButton onClick={() => setLoading(true)} {...fwConfig} /> : <></>}
+
+
+                <button onClick={handleVerify}>Verify Me Test</button>
             </Wrapper>
         </Container>
     )

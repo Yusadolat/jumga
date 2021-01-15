@@ -112,6 +112,7 @@ const ProductPage:React.FC = (props: any) => {
         },
       };
     
+
     const fwConfig:any = {
     ...config,
     text: 'Pay with Flutterwave!',
@@ -122,12 +123,28 @@ const ProductPage:React.FC = (props: any) => {
     onClose: () => {},
     };
 
+
+    const handleClick = () => {
+        fetch("")
+        .then((res:any) => res.json())
+        .then((data:any) => {
+            const btn:any = document.querySelector(".checkout-btn");
+            btn.click();
+        })
+        .catch((err) => setError(err.message))
+    }
     let content;
     if(isSignedIn){
         if(isMerchant){
             content = <p>You need to sign in as a customer to be able to purchase Item</p>
         }else{
-            content = <FlutterWaveButton {...fwConfig} />
+            content = (<>
+            <button onClick={handleClick}>Proceed to checkout</button>
+
+            <div style={{display: 'none'}}>
+                <FlutterWaveButton className="checkout-btn" {...fwConfig} />
+            </div>
+            </>)
         }
     }else{
     content = (
