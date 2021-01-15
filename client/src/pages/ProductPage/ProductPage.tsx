@@ -157,10 +157,24 @@ const ProductPage:React.FC = (props: any) => {
     </>
     )}
 
+
+    const fetchMerchantData = (merchant_id:string) => {
+        console.log(merchant_id);
+        fetch("https://jumga.herokuapp.com/api/v1/users/5fee496c13ff1e3f73874e2e")
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch((err) => setError(err.message));
+    }
+
+    useEffect(() => {
+        fetchMerchantData(product.user);
+    }, [product.user]);
+
     useEffect(() => {
         fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
+            console.log(data)
             setProduct(data);
             setLoading(false);
             setLastAccessedProduct(id);
@@ -173,6 +187,7 @@ const ProductPage:React.FC = (props: any) => {
 
         // eslint-disable-next-line
     }, [])
+
 
     return (
         <>
