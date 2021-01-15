@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux'
 import styled from 'styled-components';
 
@@ -92,6 +92,7 @@ type ModalProps = {
     setModalShown: (state:any) => void;
     addProduct: (data:any) => void;
     error: string;
+    notification: string;
 }
 type FormProps = {
     title: string;
@@ -99,7 +100,7 @@ type FormProps = {
     delivery_fee: string;
     currency: string;
 }
-const AddItemModal = ({error, setModalShown, addProduct}:ModalProps) => {
+const AddItemModal = ({notification, error, setModalShown, addProduct}:ModalProps) => {
     const [data, setData] = useState<FormProps>({title: "", price: "", delivery_fee: "", currency: ""});
 
 
@@ -141,6 +142,8 @@ const AddItemModal = ({error, setModalShown, addProduct}:ModalProps) => {
                 <input onChange={(e) => HandleChange(e)} value={data.delivery_fee} name="delivery_fee" type="number" placeholder="Delivery Fee - Auto Added" readOnly/>
 
                 {error ? <p>{error}</p> : <></>}
+
+                {notification ? <p>{notification}</p> : <></>}
                 <input type="submit" value="Add Item" />
             </form>
         </ModalContainer>
@@ -149,31 +152,63 @@ const AddItemModal = ({error, setModalShown, addProduct}:ModalProps) => {
 const Dashboard = () => {
     const [modalShown, setModalShown] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [notification, setNotification] = useState<string>("");
 
     const user = useSelector((state: any) => state.user);
 
-    const { token} = user.user;
+    console.log(user);
+    const { token, _id} = user.user;
 
     const addProduct = (data:any) => {
-        fetch("", {
+        
+        fetch("https://jumga.herokuapp.com/api/v1/products", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data, merchant_id: _id})
         })
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+            setNotification("Item Successfully Added");
+            setLoading(false);
+
+            setTimeout(() => {
+                setNotification("");
+            }, 3000)
+            setModalShown(false);
+            fetchMyProducts();
+        })
         .catch((err) => setError(err.message))
     }
+
+    const fetchMyProducts = () => {
+
+        console.log(_id);
+        fetch(`https://jumga.herokuapp.com/api/v1/products/${_id}`)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => setError(err.message))
+    }
+
+    useEffect(() => {
+        fetchMyProducts();
+        
+        // eslint-disable-next-line
+    }, [])
     return (
         <>
-        {modalShown && <AddItemModal error={error} addProduct={addProduct} setModalShown={setModalShown}/>}
+        {modalShown && <AddItemModal notification={notification} error={error} addProduct={addProduct} setModalShown={setModalShown}/>}
         <Header />
         <Container>
             <Title>Past Orders</Title>
             <button onClick={() => setModalShown(true)}>Add New Item</button>
+            
+            {loading ? <p>Loading...</p> : <></>}
             <Table>
                 <thead>
                    <tr>
