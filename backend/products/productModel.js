@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 
 const productSchema = mongoose.Schema(
   {
-    user: {
+    merchant_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',

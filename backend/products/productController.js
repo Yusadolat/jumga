@@ -14,21 +14,19 @@ const getProducts = asyncHandler(async (req, res) => {
 const createProduct = asyncHandler(async (req, res) => {
   try{
   const product = new Product({
-    name: 'Sample name',
-    price: 0,
-    user: req.user._id,
+    title: req.body.title,
+    price: req.body.price,
+    merchant_id: req.body.merchant_id,
     image: 'https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg',
-    brand: 'Sample brand',
-    category: 'Sample category',
-    countInStock: 0,
-    numReviews: 0,
-    description: 'Sample description',
+    delivery_fee: req.body.delivery_fee,
+    currency: req.body.currency,
+    
   })
 
   const createdProduct = await product.save()
   res.status(201).json(createdProduct)
 } catch (error) {
-  res.status(500).send({ error})
+  res.status(500).send({message: error.message})
 }
 })
 
