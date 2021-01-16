@@ -23,4 +23,7 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
-export { createOrder };
+
+const getOrders = asyncHandler(async (req, res) => {})
+
+export { createOrder, getOrders };
