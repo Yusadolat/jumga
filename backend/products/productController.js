@@ -32,12 +32,11 @@ const createProduct = asyncHandler(async (req, res) => {
 
 
 const getProductById = asyncHandler(async (req, res) => {
+  try{
   const product = await Product.findById(req.params.id);
-
-  if (product) {
     res.status(200).json(product);
-  } else {
-    res.status(404).send({ status: "Failed", message: error.message });
+  } catch (error) {
+    res.status(404).send({ status: "Failed", message: error });
   }
 });
 
