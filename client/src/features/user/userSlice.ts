@@ -38,6 +38,7 @@ const initialState:User = {
       initialState,
       reducers: {
         addUser(state, action) {
+          sessionStorage.setItem("user", JSON.stringify(action.payload));
           state.user = action.payload;
           state.isSignedIn = true;
         },
