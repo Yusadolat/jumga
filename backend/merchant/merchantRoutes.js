@@ -6,9 +6,9 @@ const router = express.Router();
 import { getProducts, deleteProduct } from "./merchantController.js";
 
 router
-  .route('/:id')
+  .route("/:id")
   .get(getProducts)
   .delete(protect, merchant, deleteProduct)
-  .put()
+  .put();
 
 export default router;
