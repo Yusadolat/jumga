@@ -12,9 +12,9 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     try {
         const response = await fetch('https://jumga.herokuapp.com/api/v1/products');
         const responseJson = await response.json();
-        return responseJson;
+        return responseJson.data.products;
     } catch (error) {
-        console.log(error.message);
+      return {status: "Failed", message: error.message}
     }
   })
 
@@ -31,8 +31,8 @@ const productsSlice = createSlice({
             state.error = "";
           })
           .addCase(fetchProducts.fulfilled, (state, {payload}) => {
-            if(typeof payload === undefined){
-              state.error = "Something went wrong with the request";
+            if(typeof payload === undefined || payload.status === "Failed"){
+              state.error = payload.message || "Something went wrong with the request";
             }
             else {
               state.products = payload;

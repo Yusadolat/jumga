@@ -132,7 +132,6 @@ type ModalProps = {
 const CheckoutModal = ({setModalShown, fwConfig}:ModalProps) => {
     const HandleSubmit = (e:any) => {
         e.preventDefault();
-        console.log(e)
     }
     return(
         <ModalContainer>
@@ -217,7 +216,6 @@ const ProductPage:React.FC = (props: any) => {
     ...config,
     text: 'Pay Now!',
     callback: (response:any) => {
-        console.log(response);
         closePaymentModal() // this will close the modal programmatically
         setModalShown(false);
 
@@ -238,7 +236,6 @@ const ProductPage:React.FC = (props: any) => {
                 setTimeout(() => {
                     setProcessingOrder("");
                 }, 3000);
-                console.log(data)
             })
             .catch((err) => {
                 setProcessingOrder("Something went wrong!");
@@ -278,7 +275,7 @@ const ProductPage:React.FC = (props: any) => {
 
 
     const fetchMerchantData = (merchant_id:string) => {
-        fetch("https://jumga.herokuapp.com/api/v1/users/5ff6dfc31d6f83920d5ab91a")
+        fetch(`https://jumga.herokuapp.com/api/v1/users/${merchant_id}`)
         .then((res) => res.json())
         .then((data) => {
             const {business_name, country, dispatch_rider, split_value, subaccount_id} = data;
@@ -288,16 +285,15 @@ const ProductPage:React.FC = (props: any) => {
     }
 
     useEffect(() => {
-        fetchMerchantData(product.user);
+        fetchMerchantData(product.merchant_id);
 
         // eslint-disable-next-line
-    }, [product.user]);
+    }, [product.merchant_id]);
 
     useEffect(() => {
         fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
             setProduct(data);
             setLoading(false);
             setLastAccessedProduct(id);

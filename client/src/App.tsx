@@ -17,25 +17,40 @@ import Verify from './pages/Merchants/Verify/Verify';
 
 // Components
 import ScrollToTop from './ScrollToTop';
+import Loading from './components/Loading/Loading'
 
 import './App.css';
+import { addUser } from './features/user/userSlice';
 
 
 
 const App: React.FC = () => {
-  const [lastAccessedProduct, setLastAccessedProduct] = useState<string>("")
+  const [lastAccessedProduct, setLastAccessedProduct] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const dispatch = useDispatch();
   const {user } = useSelector((state: any) => state);
   const { isMerchant, account_status } = user.user;
   const { isSignedIn } = user;
 
+  const persistUser = () => {
+    const userFromStorage:any = JSON.parse(sessionStorage.getItem("user") || "{}");
+    if(Object.keys(userFromStorage).length > 0) {
+      dispatch(addUser(userFromStorage))
+    }
+    setTimeout(() => {
+      setLoading(false)
+    }, 2000)
+  }
   useEffect(() => {
+    persistUser();
     dispatch(fetchProducts());
   // eslint-disable-next-line
   }, []);
 
-  console.log(user)
+  if(loading){
+    return <Loading />
+  }
 
   return (
     <Router>

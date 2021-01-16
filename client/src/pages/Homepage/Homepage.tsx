@@ -19,10 +19,7 @@ const Homepage:React.FC<Props> = () => {
 
     const products = useSelector((state: any) => state.products);
 
-    const {loading, error} = products;
-    console.log(products)
-
-   
+    const {loading, error} = products;   
     return (
        <>
        <Header />

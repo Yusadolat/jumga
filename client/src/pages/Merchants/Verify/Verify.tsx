@@ -31,7 +31,6 @@ function Verify() {
     const  user = useSelector((state:any) => state.user);
     const {business_name, email, phone_number, _id, token } = user.user;
 
-    console.log(user.user);
 
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
@@ -56,7 +55,6 @@ function Verify() {
         text: 'Verify Store',
         callback: (response:any) => {
           setLoading(true);
-          console.log({response, token, _id});
           if(response.status === "successful"){
             alert("Successful!");
           }else{
@@ -82,7 +80,6 @@ function Verify() {
             })
             .then((res) => res.json())
             .then((data) => {  
-              console.log(data);
               const {token, updatedUser} = data;
               const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
               const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
