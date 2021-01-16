@@ -49,7 +49,6 @@ const Dashboard = () => {
 
     const user = useSelector((state: any) => state.user);
 
-    console.log(user);
     const { token, _id} = user.user;
 
     const addProduct = (data:any) => {

@@ -35,8 +35,6 @@ const App: React.FC = () => {
 
   const persistUser = () => {
     const userFromStorage:any = JSON.parse(sessionStorage.getItem("user") || "{}");
-
-    console.log(userFromStorage);
     if(Object.keys(userFromStorage).length > 0) {
       dispatch(addUser(userFromStorage))
     }
