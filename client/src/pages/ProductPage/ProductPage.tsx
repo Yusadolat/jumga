@@ -62,31 +62,131 @@ const MainContainer = styled(Container)`
         }
     }
 `
+const ModalContainer = styled.div`
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 9999999;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
+
+    form {
+        background: #fff;
+        width: 500px;
+        min-height: 450px;
+        padding: 20px 70px;
+        position: relative;
+
+        @media screen and (max-width: 550px){
+            width: 80%;
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        h3 {
+            font-size: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: #3c3c34;
+        }
+        textarea {
+            width: 100%;
+            margin: 3px auto 18px auto;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 15px;
+            display: block;
+            outline: none;
+            border: 1px solid rgba(0,0,0,0.3);
+            background: #fff;
+        }
+        input[type="submit"]{
+            background: #14ace2;
+            color: #fff;
+            font-size: 20px;
+        }
+        label{
+            font-size: 15px;
+            font-weight: 600;
+        }
+    }
+
+`
+
+
+type ModalProps = {
+    setModalShown: (state:boolean) => void;
+    fwConfig:any;
+}
+const CheckoutModal = ({setModalShown, fwConfig}:ModalProps) => {
+    const HandleSubmit = (e:any) => {
+        e.preventDefault();
+        console.log(e)
+    }
+    return(
+        <ModalContainer>
+            <form onSubmit={(e) => HandleSubmit(e)}>
+                <span className="close" onClick={() => setModalShown(false)}>X</span>
+                <h3>Add Item</h3>
+                <label htmlFor="address">Shipping Address</label>
+                <textarea rows={4} cols={12} name="shipping_address">
+
+                </textarea>
+
+                <h5>Item Fee: </h5>
+                <h5>Shipping Fee: </h5>
+                
+                <FlutterWaveButton className="checkout-btn" {...fwConfig} />
+            </form>
+        </ModalContainer>
+    )
+}
 
 
 const ProductPage:React.FC = (props: any) => {
     const [product, setProduct] = useState<any>([]);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [merchant, setMerchant] = useState<any>({});
+    const [error, setError] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [processingOrder, setProcessingOrder] = useState<string>("");
+    const [modalShown, setModalShown] = useState<boolean>(false)
     const params:any = useParams();
     const setLastAccessedProduct = props.setLastAccessedProduct;
-    
+    const history = props.history;
     const id = params.id;
 
     const { user } = useSelector((state: any) => state);
-    const history = props.history;
-
-    const {isMerchant} = user.user;
     const {isSignedIn} = user;
-    let business_name = "ABC", email = "test@gmail.com", fullname="Test Test", phone_number = '00120921092';
+    const { email, fullname, isMerchant, phone_number, token} = user.user;
+    const {business_name, dispatch_rider, subaccount_id } = merchant;
 
     
+    const {image, price, delivery_fee,} = product;
+
+
+    // Calculate the total and split value for each item
+    const total_amount = price + +delivery_fee
+    const dispatch_split_value = (+delivery_fee/total_amount);
+    const merchant_split_value = (+price/total_amount);
+    
+    
+
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
         tx_ref: Date.now(),
-        amount: product.price,
-        currency: 'USD',
+        amount: total_amount,
+        currency: product.currency,
         payment_options: 'card,mobilemoney,ussd',
         customer: {
           email,
@@ -95,19 +195,19 @@ const ProductPage:React.FC = (props: any) => {
         },
         subaccounts: [
             {
-              id: "RS_A8EB7D4D9C66C0B1C75014EE67D4D663",
+              id: subaccount_id,
               transaction_charge_type: 'percentage',
-              transaction_charge: 0.9
+              transaction_charge:merchant_split_value
             },
             {
-              id: "RS_CF5B2A15E2CCD39F44E7774376EAE5C5",
+              id: dispatch_rider,
               transaction_charge_type: 'percentage',
-              transaction_charge: 0.9
+              transaction_charge: dispatch_split_value
             },
         ],
         customizations: {
           title: business_name,
-          description: `Payment for store verification`,
+          description: `Payment for item - ${product.title}`,
           logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
         },
       };
@@ -115,23 +215,46 @@ const ProductPage:React.FC = (props: any) => {
 
     const fwConfig:any = {
     ...config,
-    text: 'Pay with Flutterwave!',
+    text: 'Pay Now!',
     callback: (response:any) => {
         console.log(response);
         closePaymentModal() // this will close the modal programmatically
+        setModalShown(false);
+
+        if(response.status === "successful"){
+            setProcessingOrder("Processing Order....")
+            fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({})
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                setProcessingOrder("Order Processed Successfully!");
+
+                setTimeout(() => {
+                    setProcessingOrder("");
+                }, 3000);
+                console.log(data)
+            })
+            .catch((err) => {
+                setProcessingOrder("Something went wrong!");
+                setTimeout(() => {
+                    setProcessingOrder("");
+                }, 3000);
+                setError(err.message);
+            });
+        }
     },
     onClose: () => {},
     };
 
 
     const handleClick = () => {
-        fetch("")
-        .then((res:any) => res.json())
-        .then((data:any) => {
-            const btn:any = document.querySelector(".checkout-btn");
-            btn.click();
-        })
-        .catch((err) => setError(err.message))
+        setModalShown((previousState) => !previousState)
     }
     let content;
     if(isSignedIn){
@@ -140,10 +263,6 @@ const ProductPage:React.FC = (props: any) => {
         }else{
             content = (<>
             <button onClick={handleClick}>Proceed to checkout</button>
-
-            <div style={{display: 'none'}}>
-                <FlutterWaveButton className="checkout-btn" {...fwConfig} />
-            </div>
             </>)
         }
     }else{
@@ -159,15 +278,19 @@ const ProductPage:React.FC = (props: any) => {
 
 
     const fetchMerchantData = (merchant_id:string) => {
-        console.log(merchant_id);
-        fetch("https://jumga.herokuapp.com/api/v1/users/5fee496c13ff1e3f73874e2e")
+        fetch("https://jumga.herokuapp.com/api/v1/users/5ff6dfc31d6f83920d5ab91a")
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+            const {business_name, country, dispatch_rider, split_value, subaccount_id} = data;
+            setMerchant({business_name, country, dispatch_rider, split_value, subaccount_id})
+        })
         .catch((err) => setError(err.message));
     }
 
     useEffect(() => {
         fetchMerchantData(product.user);
+
+        // eslint-disable-next-line
     }, [product.user]);
 
     useEffect(() => {
@@ -191,6 +314,7 @@ const ProductPage:React.FC = (props: any) => {
 
     return (
         <>
+            {modalShown ? <CheckoutModal fwConfig={fwConfig} setModalShown={setModalShown}/> : <></>}
             <Header />
             <MainContainer>
                 <BackButton onClick={() => history.goBack()}> &lt; Back</BackButton>
@@ -198,7 +322,7 @@ const ProductPage:React.FC = (props: any) => {
                 {Object.entries(product).length ? (
                     <div className="row">
                     <div className="col">
-                        <img src={product?.image} alt="Product Item"/>
+                        <img src={image} alt="Product Item"/>
                     </div>
                     <div className="col">
                         <h2>{product?.title}</h2>
@@ -210,7 +334,8 @@ const ProductPage:React.FC = (props: any) => {
                     </div>
                     </div>
                 ) : <></>}
-                    {error ? <p>{error}</p> : <></>}               
+                    {error ? <p>{error}</p> : <></>} 
+                    {processingOrder ? <p>{processingOrder}</p> : <></>}              
             </MainContainer>
         </>
     )
