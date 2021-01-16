@@ -5,6 +5,7 @@ import cors from 'cors'
 import bankRoutes from "./banks/bankRoutes.js"
 import userRoutes from "./users/userRoutes.js"
 import productRoutes from "./products/productRoutes.js"
+import merchantRoutes from "./merchant/merchantRoutes.js"
 import orderRoutes from "./orders/orderRoutes.js"
 
 dotenv.config();
@@ -31,7 +32,8 @@ app.get("/", (req, res) => {
 });
 app.use('/api/v1/banks', bankRoutes)
 app.use('/api/v1/users', cors(), userRoutes)
-app.use('/api/v1/products', productRoutes)
+app.use('/api/v1/merchant/products', merchantRoutes)
+app.use('/api/v1/product', productRoutes)
 app.use('/api/orders', orderRoutes)
 
 
