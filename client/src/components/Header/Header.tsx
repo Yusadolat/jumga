@@ -15,6 +15,7 @@ function Header() {
     const dispatch = useDispatch();
     const HandleLogout = () => {
         dispatch(logoutUser(""));
+        sessionStorage.clear();
         history.push("/")
     }
     let buttons;
@@ -22,6 +23,7 @@ function Header() {
         buttons = (
             <div className="right-side">
                 <LinkButton className="merchants" to="/dashboard">My Store</LinkButton>
+                <LinkButton to="/" onClick={HandleLogout}>Logout</LinkButton>
             </div>
         )
     }else if( isSignedIn && !isMerchant){
