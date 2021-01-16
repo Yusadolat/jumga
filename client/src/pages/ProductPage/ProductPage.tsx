@@ -278,9 +278,11 @@ const ProductPage:React.FC = (props: any) => {
 
 
     const fetchMerchantData = (merchant_id:string) => {
+        console.log(merchant_id);
         fetch("https://jumga.herokuapp.com/api/v1/users/5ff6dfc31d6f83920d5ab91a")
         .then((res) => res.json())
         .then((data) => {
+            console.log(data);
             const {business_name, country, dispatch_rider, split_value, subaccount_id} = data;
             setMerchant({business_name, country, dispatch_rider, split_value, subaccount_id})
         })
@@ -288,12 +290,13 @@ const ProductPage:React.FC = (props: any) => {
     }
 
     useEffect(() => {
-        fetchMerchantData(product.user);
+        fetchMerchantData(product.merchant_id);
 
         // eslint-disable-next-line
-    }, [product.user]);
+    }, [product.merchant_id]);
 
     useEffect(() => {
+        console.log(id);
         fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
