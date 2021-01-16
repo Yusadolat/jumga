@@ -8,7 +8,7 @@ import {createProduct, getProducts, getProductById, deleteProduct } from "./prod
 router.route("/").get(getProducts).post(createProduct)
 router
   .route('/:id')
-  .get(getProductById)
+  .get(getProducts)
   .delete(protect, merchant, deleteProduct)
   .put()
 export default router;

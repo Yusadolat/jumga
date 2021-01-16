@@ -3,9 +3,12 @@ import Product from "../products/productModel.js";
 
 const getProducts = asyncHandler(async (req, res) => {
   try {
-    const products = await Product.find();
+    let  user_id = req.params.user_id
+    const products = await Product.find({user_id: user_id});
 
-    res.status(200).json(products);
+    res.status(200).json({status: "success",
+    message: "All Dues",
+    data:{products},});
   } catch (error) {
     res.status(500).send({ status: "Failed", message: error });
   }
