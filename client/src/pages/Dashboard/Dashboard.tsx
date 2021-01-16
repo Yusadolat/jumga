@@ -31,6 +31,12 @@ const Table = styled.table`
             text-align: center;
         }
     }
+
+    p{
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
 `
 const ModalContainer = styled.div`
     position: absolute;
@@ -162,6 +168,7 @@ const Dashboard = () => {
     const [modalShown, setModalShown] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [fetchLoading, setFetchLoading] = useState<boolean>(false);
     const [notification, setNotification] = useState<string>("");
 
     const user = useSelector((state: any) => state.user);
@@ -194,7 +201,8 @@ const Dashboard = () => {
     }
 
     const fetchMyProducts = () => {
-        console.log(_id);
+        setFetchLoading(true);
+        setError("");
         fetch(`https://jumga.herokuapp.com/api/v1/products/${_id}`)
         .then((res) => res.json())
         .then((data) => {
@@ -203,8 +211,12 @@ const Dashboard = () => {
             }else{
                 setError(data.message);
             }
+            setFetchLoading(false);
         })
-        .catch((err) => setError(err.message))
+        .catch((err) => {
+            setError(err.message)
+            setFetchLoading(false);
+        })
     }
 
     useEffect(() => {
@@ -243,9 +255,12 @@ const Dashboard = () => {
                         </tr>    
                         )
                     })}
-                   
+                   {fetchLoading && !error ? <p>Fetching data...</p> : <></>}
+                   {error && !fetchLoading? <p>{error}</p> : <></>}
                 </tbody> 
             </Table> 
+        
+        
         </Container>
         </>
     )
