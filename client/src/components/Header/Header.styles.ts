@@ -6,7 +6,7 @@ export const HeaderDiv = styled.header`
     position: sticky;
     top: 0;
     background: #fff;
-    z-index: 999999999999999999999999999999;
+    z-index: 9999999;
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
