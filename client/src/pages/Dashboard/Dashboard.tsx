@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import {Container} from '../../styles/GlobalStyles'
 import Header from '../../components/Header/Header';
+import { Link } from 'react-router-dom';
 
 const Title = styled.h5`
     font-size: 20px;
@@ -14,14 +15,21 @@ const Table = styled.table`
     width: 100%;
     margin-top: 20px;
     background: #fcefce;
-    padding: 20px;
 
-    tbody tr {
-       border: 1px solid rgba(0,0,0, 0.5);
+    thead tr{
+        background: #000;
+        th{
+            color: #fff;
+        }
     }
-    td {
-        text-align: center;
-        padding-bottom: 10px;
+    td, th{
+        padding: 13px 0px;
+        min-width: 100px;
+        border-bottom: 1px solid rgba(0,0,0, 0.5);
+
+        &:nth-child(1){
+            text-align: center;
+        }
     }
 `
 const ModalContainer = styled.div`
@@ -150,6 +158,7 @@ const AddItemModal = ({notification, error, setModalShown, addProduct}:ModalProp
     )
 }
 const Dashboard = () => {
+    const [products, setProducts] = useState<[]>([])
     const [modalShown, setModalShown] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -174,7 +183,7 @@ const Dashboard = () => {
         .then((data) => {
             setNotification("Item Successfully Added");
             setLoading(false);
-
+            fetchMyProducts();
             setTimeout(() => {
                 setNotification("");
             }, 3000)
@@ -185,12 +194,15 @@ const Dashboard = () => {
     }
 
     const fetchMyProducts = () => {
-
         console.log(_id);
         fetch(`https://jumga.herokuapp.com/api/v1/products/${_id}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
+            if(data.status === "success"){
+                setProducts(data.data.products);
+            }else{
+                setError(data.message);
+            }
         })
         .catch((err) => setError(err.message))
     }
@@ -214,21 +226,24 @@ const Dashboard = () => {
                    <tr>
                         <th>#</th>
                         <th>Item Name</th>
-                        <th>Order ID</th>
                         <th>Item Price</th>
                         <th>Action</th>
                    </tr>
                 </thead>   
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Black T-Shirt</td>
-                        <td>As332432434234</td>
-                        <td>$200</td>
-                        <td>
-                            <button>View Product</button>
-                        </td>
-                    </tr>    
+                    {products?.map((product:any, idx) => {
+                        return (
+                            <tr key={idx}>
+                            <td>{idx + 1}</td>
+                            <td>{product.title}</td>
+                            <td>{product.price}</td>
+                            <td>
+                                <Link to={`/product/${product._id}`}>View Product</Link>
+                            </td>
+                        </tr>    
+                        )
+                    })}
+                   
                 </tbody> 
             </Table> 
         </Container>
