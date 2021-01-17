@@ -2,11 +2,11 @@ import asyncHandler from "express-async-handler";
 import Order from "../orders/orderModel.js";
 
 const createOrder = asyncHandler(async (req, res) => {
+    console.log(req.body);
   try {
-
     const order = await Order.create({
         title: req.body.title,
-        user_id: req.body.user,
+        user_id: req.body.user_id,
         product_id: req.body.product_id,
         customer: req.body.customer,
         amount: req.body.amount,

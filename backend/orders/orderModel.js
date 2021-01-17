@@ -9,7 +9,7 @@ const orderSchema = mongoose.Schema({
   product_id: { type: String },
   customer: {
     name: { type: String },
-    email: { type: Number },
+    email: { type: String },
     phone_number: { type: Number },
   },
   amount: { type: String },
