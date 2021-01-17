@@ -81,10 +81,11 @@ const Dashboard = () => {
     const fetchMyProducts = () => {
         setFetchLoading(true);
         setError("");
-        fetch(`https://jumga.herokuapp.com/api/v1/products/${_id}`)
+        fetch(`https://jumga.herokuapp.com/api/v1/merchant/products/${_id}`)
         .then((res) => res.json())
         .then((data) => {
             if(data.status === "success"){
+                console.log(data.data.products)
                 setProducts(data.data.products);
             }else{
                 setError(data.message);

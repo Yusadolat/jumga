@@ -12,6 +12,7 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     try {
         const response = await fetch('https://jumga.herokuapp.com/api/v1/products');
         const responseJson = await response.json();
+        console.log(responseJson);
         return responseJson.data.products;
     } catch (error) {
       return {status: "Failed", message: error.message}

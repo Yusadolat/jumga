@@ -63,20 +63,19 @@ const MainContainer = styled(Container)`
     }
 `
 const ModalContainer = styled.div`
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
-    z-index: 9999999;
+    z-index: 999999999999999999999999999999999 !important;
     background: rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-
-    form {
+    div.container {
         background: #fff;
         width: 500px;
         min-height: 450px;
@@ -94,32 +93,43 @@ const ModalContainer = styled.div`
             font-weight: 600;
             cursor: pointer;
         }
+        h1{
+            font-size: 24px;
+            color: #ff577f;
+            border-bottom: 2px solid rgba(0,0,0,.4);
+        }
+        h5{
+            font-size: 18px;
+            span {
+                width: 40%;
+                display: inline-block;
+            }
+        }
         h3 {
             font-size: 20px;
             margin: 20px 0;
-            text-align: center;
-            color: #3c3c34;
+            border-top: 1px solid rgba(0,0,0,.3);
+            border-bottom: 1px solid rgba(0,0,0,.3);
+            padding: 6px 0;
+            span {
+                width: 40%;
+                display: inline-block;
+            }
         }
-        textarea {
+        button {
             width: 100%;
-            margin: 3px auto 18px auto;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 15px;
-            display: block;
-            outline: none;
-            border: 1px solid rgba(0,0,0,0.3);
-            background: #fff;
-        }
-        input[type="submit"]{
-            background: #14ace2;
-            color: #fff;
-            font-size: 20px;
-        }
-        label{
-            font-size: 15px;
+            background: #ff577f;
+            color: #fdffbc;
+            font-size: 16px;
             font-weight: 600;
+            padding: 10px;
+            outline: none;
+            border: none;
+            border-radiues: 10px;
+            cursor: pointer;
+            margin-top: 50px;
         }
+      
     }
 
 `
@@ -128,26 +138,20 @@ const ModalContainer = styled.div`
 type ModalProps = {
     setModalShown: (state:boolean) => void;
     fwConfig:any;
+    product:any;
 }
-const CheckoutModal = ({setModalShown, fwConfig}:ModalProps) => {
-    const HandleSubmit = (e:any) => {
-        e.preventDefault();
-    }
+const CheckoutModal = ({setModalShown, fwConfig, product}:ModalProps) => {
     return(
         <ModalContainer>
-            <form onSubmit={(e) => HandleSubmit(e)}>
+            <div className="container">
                 <span className="close" onClick={() => setModalShown(false)}>X</span>
-                <h3>Add Item</h3>
-                <label htmlFor="address">Shipping Address</label>
-                <textarea rows={4} cols={12} name="shipping_address">
-
-                </textarea>
-
-                <h5>Item Fee: </h5>
-                <h5>Shipping Fee: </h5>
+                <h1>Order Summary</h1>
                 
+                <h5><span>Item Fee:</span>  {product.currency} {product.price}</h5>
+                <h5><span>Shipping Fee:</span>  {product.currency} {product.delivery_fee}</h5>
+                <h3><span>Total:</span> {product.currency} {+product.price + +product.delivery_fee}</h3>
                 <FlutterWaveButton className="checkout-btn" {...fwConfig} />
-            </form>
+            </div>
         </ModalContainer>
     )
 }
@@ -216,23 +220,42 @@ const ProductPage:React.FC = (props: any) => {
     ...config,
     text: 'Pay Now!',
     callback: (response:any) => {
+        console.log(response)
         closePaymentModal() // this will close the modal programmatically
         setModalShown(false);
 
+
         if(response.status === "successful"){
+            const{ customer, amount, currency, user_id, transaction_id, tx_ref,flw_ref } = response;
+
+            const orderBody = { 
+                title: product.title, 
+                product_id: id,
+                user_id, 
+                customer: {
+                        name: customer.name,
+                        email: customer.email,
+                        phone_number: customer.phone_number
+                    }, 
+                amount, 
+                currency, 
+                transaction_id, 
+                tx_ref, 
+                flw_ref 
+            }
             setProcessingOrder("Processing Order....")
-            fetch("", {
+            fetch("https://jumga.herokuapp.com/api/v1/orders/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + token
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify({orderBody})
             })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data);
                 setProcessingOrder("Order Processed Successfully!");
-
                 setTimeout(() => {
                     setProcessingOrder("");
                 }, 3000);
@@ -294,6 +317,7 @@ const ProductPage:React.FC = (props: any) => {
         fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
+            console.log(data);
             setProduct(data);
             setLoading(false);
             setLastAccessedProduct(id);
@@ -310,7 +334,7 @@ const ProductPage:React.FC = (props: any) => {
 
     return (
         <>
-            {modalShown ? <CheckoutModal fwConfig={fwConfig} setModalShown={setModalShown}/> : <></>}
+            {modalShown ? <CheckoutModal product={product} fwConfig={fwConfig} setModalShown={setModalShown}/> : <></>}
             <Header />
             <MainContainer>
                 <BackButton onClick={() => history.goBack()}> &lt; Back</BackButton>
@@ -322,16 +346,18 @@ const ProductPage:React.FC = (props: any) => {
                     </div>
                     <div className="col">
                         <h2>{product?.title}</h2>
-                        <h2 className="price">$ {product?.price}</h2>
+                        <p>{product?.description}</p>
+                        <h2 className="price">{product?.currency} {product?.price}</h2>
 
+                        {error ? <p>{error}</p> : <></>} 
+                        {processingOrder ? <p>{processingOrder}</p> : <></>} 
                         <div className="cta">
                             {content}
                         </div>
                     </div>
                     </div>
                 ) : <></>}
-                    {error ? <p>{error}</p> : <></>} 
-                    {processingOrder ? <p>{processingOrder}</p> : <></>}              
+                                
             </MainContainer>
         </>
     )

@@ -57,6 +57,7 @@ function Verify() {
           setLoading(true);
           if(response.status === "successful"){
             alert("Successful!");
+            handleVerify();
           }else{
             setError(response.message);
           }
@@ -69,6 +70,7 @@ function Verify() {
     
 
       const handleVerify = () => {
+        console.log(_id, token);
         fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
               method: "PUT",
               headers: {
@@ -80,6 +82,7 @@ function Verify() {
             })
             .then((res) => res.json())
             .then((data) => {  
+              console.log(data);  
               const {token, updatedUser} = data;
               const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
               const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
@@ -95,9 +98,6 @@ function Verify() {
                 {loading && !error ? <div>Processing Payment...</div> : <></>}
                 {error && !loading ? <div>{error}</div> : <></>}
                 {!loading ? <FlutterWaveButton onClick={() => setLoading(true)} {...fwConfig} /> : <></>}
-
-
-                <button onClick={handleVerify}>Verify Me Test</button>
             </Wrapper>
         </Container>
     )

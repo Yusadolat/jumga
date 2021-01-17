@@ -30,7 +30,7 @@ function Header() {
         buttons = (
             <div className="right-side">
                 <p>Welcome, {email}</p>
-                <LinkButton className="merchants" to="/dashboard">My Orders</LinkButton>
+                {/* <LinkButton className="merchants" to="/dashboard">My Orders</LinkButton> */}
                 <LinkButton to="/" onClick={HandleLogout}>Logout</LinkButton>
             </div>
         )
