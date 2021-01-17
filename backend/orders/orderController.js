@@ -5,7 +5,8 @@ const createOrder = asyncHandler(async (req, res) => {
   try {
 
     const order = await Order.create({
-        user: req.body.user,
+        user_id: req.body.user,
+        product_id: req.body.product_id,
         orderItems: req.body.orderItems,
         shippingAddress: req.body.shippingAddress,
         paymentResult: req.body.paymentResult,
