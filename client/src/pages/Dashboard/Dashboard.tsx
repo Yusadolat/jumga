@@ -39,6 +39,16 @@ const ParagraphText = styled.p`
     width: 100%;
 `
 
+const AddButton= styled.button`
+    background: #eb596e;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 30px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+`
+
 const Dashboard = () => {
     const [products, setProducts] = useState<[]>([])
     const [modalShown, setModalShown] = useState<boolean>(false);
@@ -85,7 +95,6 @@ const Dashboard = () => {
         .then((res) => res.json())
         .then((data) => {
             if(data.status === "success"){
-                console.log(data.data.products)
                 setProducts(data.data.products);
             }else{
                 setError(data.message);
@@ -109,7 +118,7 @@ const Dashboard = () => {
         <Header />
         <Container>
             <Title>Past Orders</Title>
-            <button onClick={() => setModalShown(true)}>Add New Item</button>
+            <AddButton onClick={() => setModalShown(true)}>Add New Item</AddButton>
             
             {loading ? <p>Loading...</p> : <></>}
             <Table>

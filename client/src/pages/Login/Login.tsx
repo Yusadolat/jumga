@@ -40,7 +40,6 @@ const Login = ({lastAccessedProduct}:any) => {
             if(json.status === "Failed"){
                 setError(json.message);
             }else{
-                console.log(json);
                 const {token, user, status} = json;
                 const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = user;
                 const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}

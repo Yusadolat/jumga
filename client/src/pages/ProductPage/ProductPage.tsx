@@ -171,9 +171,10 @@ const ProductPage:React.FC = (props: any) => {
 
     const { user } = useSelector((state: any) => state);
     const {isSignedIn} = user;
-    const { email, fullname, isMerchant, phone_number, token} = user.user;
+    const { email, fullname, isMerchant, phone_number, token, _id} = user.user;
     const {business_name, dispatch_rider, subaccount_id } = merchant;
 
+    console.log(user.user);
     
     const {image, price, delivery_fee,} = product;
 
@@ -226,12 +227,13 @@ const ProductPage:React.FC = (props: any) => {
 
 
         if(response.status === "successful"){
-            const{ customer, amount, currency, user_id, transaction_id, tx_ref,flw_ref } = response;
+            setProcessingOrder("Processing Order....");
+            const{ customer, amount, currency, transaction_id, tx_ref,flw_ref } = response;
 
             const orderBody = { 
                 title: product.title, 
                 product_id: id,
-                user_id, 
+                user_id: _id, 
                 customer: {
                         name: customer.name,
                         email: customer.email,
@@ -242,15 +244,16 @@ const ProductPage:React.FC = (props: any) => {
                 transaction_id, 
                 tx_ref, 
                 flw_ref 
-            }
-            setProcessingOrder("Processing Order....")
-            fetch("https://jumga.herokuapp.com/api/v1/orders/", {
+            };
+
+            console.log(orderBody)
+            fetch("https://jumga.herokuapp.com/api/v1/orders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + token
                 },
-                body: JSON.stringify({orderBody})
+                body: JSON.stringify(orderBody)
             })
             .then((res) => res.json())
             .then((data) => {

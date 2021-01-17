@@ -56,7 +56,6 @@ function Verify() {
         callback: (response:any) => {
           setLoading(true);
           if(response.status === "successful"){
-            alert("Successful!");
             handleVerify();
           }else{
             setError(response.message);
@@ -67,22 +66,21 @@ function Verify() {
         },
         onClose: () => {},
       };
-    
+      
 
       const handleVerify = () => {
-        console.log(_id, token);
         fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
               method: "PUT",
               headers: {
+                "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
               },
               body: JSON.stringify({
-                account_status: true
+                "account_status": true
                 })
             })
             .then((res) => res.json())
             .then((data) => {  
-              console.log(data);  
               const {token, updatedUser} = data;
               const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = updatedUser;
               const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
