@@ -37,7 +37,7 @@ const Signup = () => {
 
         console.log({dataToBeSent: newMerchant});
         
-        fetch("https://jumga.herokuapp.com/api/v1/users/register", {
+        fetch("http://localhost:5000/api/v1/users/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -68,7 +68,7 @@ const Signup = () => {
         const val = e.target.value;
         if(val){
             setLoading(true);
-            fetch(`https://jumga.herokuapp.com/api/v1/banks/${val}`)
+            fetch(`http://localhost:5000/api/v1/banks/${val}`)
             .then((res) => res.json())
             .then((json) => {
                 if(json.status === "success"){

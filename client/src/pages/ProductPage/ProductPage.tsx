@@ -247,7 +247,7 @@ const ProductPage:React.FC = (props: any) => {
             };
 
             console.log(orderBody)
-            fetch("https://jumga.herokuapp.com/api/v1/orders", {
+            fetch("http://localhost:5000/api/v1/orders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -301,7 +301,7 @@ const ProductPage:React.FC = (props: any) => {
 
 
     const fetchMerchantData = (merchant_id:string) => {
-        fetch(`https://jumga.herokuapp.com/api/v1/users/${merchant_id}`)
+        fetch(`http://localhost:5000/api/v1/users/${merchant_id}`)
         .then((res) => res.json())
         .then((data) => {
             const {business_name, country, dispatch_rider, split_value, subaccount_id} = data;
@@ -317,7 +317,7 @@ const ProductPage:React.FC = (props: any) => {
     }, [product.merchant_id]);
 
     useEffect(() => {
-        fetch(`https://jumga.herokuapp.com/api/v1/products/${id}`)
+        fetch(`http://localhost:5000/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
             console.log(data);

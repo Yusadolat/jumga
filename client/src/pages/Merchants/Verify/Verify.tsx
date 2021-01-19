@@ -69,7 +69,7 @@ function Verify() {
       
 
       const handleVerify = () => {
-        fetch(`https://jumga.herokuapp.com/api/v1/users/${_id}`, {
+        fetch(`http://localhost:5000/api/v1/users/${_id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",

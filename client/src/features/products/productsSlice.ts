@@ -10,7 +10,7 @@ const initialState:any = {
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
     try {
-        const response = await fetch('https://jumga.herokuapp.com/api/v1/products');
+        const response = await fetch('http://localhost:5000/api/v1/products');
         const responseJson = await response.json();
         console.log(responseJson);
         return responseJson.data.products;
