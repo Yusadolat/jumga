@@ -85,7 +85,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
     axios(config)
       .then(async function (response) {
-        //res.status(200).json(response.data.data);
         const { subaccount_id } = response.data.data;
         console.log(subaccount_id);
         const newUser = await User.create({
@@ -100,6 +99,7 @@ const registerUser = asyncHandler(async (req, res) => {
           account_number,
           subaccount_id,
           isMerchant,
+          dispatch_rider: "RS_7089A586E2AF120135964960551D127A"
         });
         console.log(newUser);
         if (newUser) {
@@ -117,7 +117,6 @@ const registerUser = asyncHandler(async (req, res) => {
         }
       })
       .catch(function (error) {
-        //console.log(error.response.data.message)
         res.status(400).send({ status: "Failed", message: error.message });
       });
   }
