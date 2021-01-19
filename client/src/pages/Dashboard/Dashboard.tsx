@@ -117,7 +117,7 @@ const Dashboard = () => {
         {modalShown && <AddItemModal notification={notification} error={error} addProduct={addProduct} setModalShown={setModalShown} loading={loading}/>}
         <Header />
         <Container>
-            <Title>Past Orders</Title>
+            <Title>My Store</Title>
             <AddButton onClick={() => setModalShown(true)}>Add New Item</AddButton>
             
             {loading ? <p>Loading...</p> : <></>}

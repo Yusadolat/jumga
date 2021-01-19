@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const ProductDiv = styled.div` 
     width: 230px;
-    height: 340px;    
+    height: 300px;    
     box-shadow: 1px 4px 10px 1px rgba(0,0,0,0.085);
     border-radius: 10px;
     overflow: hidden;
@@ -15,17 +15,18 @@ const ProductDiv = styled.div`
     .title{
         color: var(--dark);
         margin: 10px 0;
-        font-size: 12px;
-        font-weight: 300;
-        min-height: 40px;
+        font-size: 16px;
+        min-height: 20px;
+        font-weight: 700;
         padding: 0 10px;
     }
     .price {
         color: red;
+        
         font-size: 15px;
         font-weight: 600;
         padding: 5px;
-        width: 100px;
+        width: 100%;
         margin: 0;
     }
     a {
@@ -40,7 +41,6 @@ const ProductDiv = styled.div`
         cursor: pointer;
         font-size: 15px;
         font-weight: 600;
-        margin-top: 2px;
         border-radius: 8px;
         background: var(--light);
         &:hover{
@@ -70,17 +70,18 @@ interface Props {
     image: string;
     title: string;
     price: number;
+    currency: string;
 }
 
 
-const ProductItem:React.FC<Props> = ({ price, title, _id, image}) => {
+const ProductItem:React.FC<Props> = ({ price, currency, title, _id, image}) => {
     return (
         <ProductDiv>
             <div className="img-wrapper">
                 <img src={image} alt="Showing product item"/>
             </div>
             <h3 className="title">{title.length > 50 ? title.substring(0, 50) + "..." : title}</h3>
-            <h4 className="price">$ {price}</h4>
+            <h4 className="price">{currency} {price.toFixed(2)}</h4>
             <Link to={`product/${_id}`} className="btn">View Product</Link>
         </ProductDiv>
     )

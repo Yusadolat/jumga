@@ -185,6 +185,7 @@ const ProductPage:React.FC = (props: any) => {
     const merchant_split_value = (+price/total_amount);
     
     
+    console.log(dispatch_rider, subaccount_id);
 
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
@@ -201,7 +202,7 @@ const ProductPage:React.FC = (props: any) => {
             {
               id: subaccount_id,
               transaction_charge_type: 'percentage',
-              transaction_charge:merchant_split_value
+              transaction_charge: merchant_split_value
             },
             {
               id: dispatch_rider,
