@@ -34,8 +34,6 @@ const Signup = () => {
     const onSubmit = (data:Inputs) => {
 
         const newMerchant = {...data, isMerchant: true, bank_name: bankName};
-
-        console.log({dataToBeSent: newMerchant});
         
         fetch("http://localhost:5000/api/v1/users/register", {
             method: "POST",
@@ -49,9 +47,6 @@ const Signup = () => {
             const {token, data} = json;
             const { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id} = data;
             const newUser = { fullname, email, phone_number, country, business_name, isMerchant, account_status, _id, token}
-            // split_value: 0.097
-            // subaccount_id: "RS_F5DAB654CFB2E9491243404CAD9198F0"
-            console.log(newUser);
             if(json.status === "Failed"){
                 setError(json.message);
             }else{

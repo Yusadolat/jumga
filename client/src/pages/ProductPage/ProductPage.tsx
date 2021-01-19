@@ -174,7 +174,6 @@ const ProductPage:React.FC = (props: any) => {
     const { email, fullname, isMerchant, phone_number, token, _id} = user.user;
     const {business_name, dispatch_rider, subaccount_id } = merchant;
 
-    console.log(user.user);
     
     const {image, price, delivery_fee,} = product;
 
@@ -185,7 +184,6 @@ const ProductPage:React.FC = (props: any) => {
     const merchant_split_value = (+price/total_amount);
     
     
-    console.log(dispatch_rider, subaccount_id);
 
     const config = {
         public_key: 'FLWPUBK_TEST-6362fd2426a30ce1662a6d949416b3f4-X',
@@ -222,7 +220,6 @@ const ProductPage:React.FC = (props: any) => {
     ...config,
     text: 'Pay Now!',
     callback: (response:any) => {
-        console.log(response)
         closePaymentModal() // this will close the modal programmatically
         setModalShown(false);
 
@@ -247,7 +244,6 @@ const ProductPage:React.FC = (props: any) => {
                 flw_ref 
             };
 
-            console.log(orderBody)
             fetch("http://localhost:5000/api/v1/orders", {
                 method: "POST",
                 headers: {
@@ -258,7 +254,6 @@ const ProductPage:React.FC = (props: any) => {
             })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 setProcessingOrder("Order Processed Successfully!");
                 setTimeout(() => {
                     setProcessingOrder("");
@@ -321,7 +316,6 @@ const ProductPage:React.FC = (props: any) => {
         fetch(`http://localhost:5000/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             setProduct(data);
             setLoading(false);
             setLastAccessedProduct(id);

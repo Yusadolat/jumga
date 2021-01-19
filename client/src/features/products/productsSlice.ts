@@ -12,7 +12,6 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     try {
         const response = await fetch('http://localhost:5000/api/v1/products');
         const responseJson = await response.json();
-        console.log(responseJson);
         return responseJson.data.products;
     } catch (error) {
       return {status: "Failed", message: error.message}
