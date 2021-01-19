@@ -64,7 +64,7 @@ const Dashboard = () => {
     const addProduct = (data:any) => {
         setLoading(true);
         setError("");
-        fetch("https://jumga.herokuapp.com/api/v1/products", {
+        fetch("http://localhost:5000/api/v1/products", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -91,7 +91,7 @@ const Dashboard = () => {
     const fetchMyProducts = () => {
         setFetchLoading(true);
         setError("");
-        fetch(`https://jumga.herokuapp.com/api/v1/merchant/products/${_id}`)
+        fetch(`http://localhost:5000/api/v1/merchant/products/${_id}`)
         .then((res) => res.json())
         .then((data) => {
             if(data.status === "success"){

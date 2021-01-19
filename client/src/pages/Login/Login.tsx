@@ -28,7 +28,7 @@ const Login = ({lastAccessedProduct}:any) => {
     const onSubmit = (data:Inputs) => {
         setError("");
         setLoading(true);
-        fetch("https://jumga.herokuapp.com/api/v1/users/login", {
+        fetch("http://localhost:5000/api/v1/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
