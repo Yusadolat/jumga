@@ -4,7 +4,7 @@ import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
 import {withRouter, useParams, Link} from 'react-router-dom';
 import styled from 'styled-components';
 
-
+import {BASE_URL} from '../../api'
 
 import Header from '../../components/Header/Header'
 import {Container} from '../../styles/GlobalStyles';
@@ -244,7 +244,7 @@ const ProductPage:React.FC = (props: any) => {
                 flw_ref 
             };
 
-            fetch("http://localhost:5000/api/v1/orders", {
+            fetch(`${BASE_URL}/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -297,7 +297,7 @@ const ProductPage:React.FC = (props: any) => {
 
 
     const fetchMerchantData = (merchant_id:string) => {
-        fetch(`http://localhost:5000/api/v1/users/${merchant_id}`)
+        fetch(`${BASE_URL}/users/${merchant_id}`)
         .then((res) => res.json())
         .then((data) => {
             const {business_name, country, dispatch_rider, split_value, subaccount_id} = data;
@@ -313,7 +313,7 @@ const ProductPage:React.FC = (props: any) => {
     }, [product.merchant_id]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/products/${id}`)
+        fetch(`${BASE_URL}/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
             setProduct(data);

@@ -7,6 +7,7 @@ import {Container} from '../../styles/GlobalStyles'
 import Header from '../../components/Header/Header';
 import AddItemModal from '../../components/AddItemModal/AddItemModal'
 
+import { BASE_URL } from '../../api'
 const Title = styled.h5`
     font-size: 20px;
     text-align: center;
@@ -64,7 +65,7 @@ const Dashboard = () => {
     const addProduct = (data:any) => {
         setLoading(true);
         setError("");
-        fetch("http://localhost:5000/api/v1/products", {
+        fetch(`${BASE_URL}/products`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -91,7 +92,7 @@ const Dashboard = () => {
     const fetchMyProducts = () => {
         setFetchLoading(true);
         setError("");
-        fetch(`http://localhost:5000/api/v1/merchant/products/${_id}`)
+        fetch(`${BASE_URL}/merchant/products/${_id}`)
         .then((res) => res.json())
         .then((data) => {
             if(data.status === "success"){

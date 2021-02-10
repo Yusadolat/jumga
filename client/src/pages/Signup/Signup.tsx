@@ -5,10 +5,12 @@ import { Link, useHistory } from 'react-router-dom';
 
 import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg'
-// STLES
+// STYLES
 import {FormContainer} from './Signup.styles'
 
 import {addUser} from '../../features/user/userSlice'
+
+import { BASE_URL } from '../../api';
 
 type Inputs = {
     email: string,
@@ -40,7 +42,7 @@ const Signup = ({lastAccessedProduct}:any) => {
             bank_code: "",
             account_number: "",
         }
-        fetch("http://localhost:5000/api/v1/users/register", {
+        fetch(`${BASE_URL}/users/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

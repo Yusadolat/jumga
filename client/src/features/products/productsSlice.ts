@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
-
+import {BASE_URL} from '../../api'
 
 const initialState:any = {
     loading: false,
@@ -10,7 +10,7 @@ const initialState:any = {
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
     try {
-        const response = await fetch('http://localhost:5000/api/v1/products');
+        const response = await fetch(`${BASE_URL}/products`);
         const responseJson = await response.json();
         return responseJson.data.products;
     } catch (error) {

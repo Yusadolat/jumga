@@ -4,11 +4,11 @@ import {useDispatch,} from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {Container} from '../../../styles/GlobalStyles'
 import Logo from '../../../assets/logo.svg'
-// STLES
+// STYLES
 import {FormContainer} from './Signup.style'
 
-
-import {addUser} from '../../../features/user/userSlice'
+import {addUser} from '../../../features/user/userSlice';
+import {BASE_URL} from '../../../api'
 type Inputs = {
     email: string,
     password: string,
@@ -35,7 +35,7 @@ const Signup = () => {
 
         const newMerchant = {...data, isMerchant: true, bank_name: bankName};
         
-        fetch("http://localhost:5000/api/v1/users/register", {
+        fetch(`${BASE_URL}/users/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -63,7 +63,7 @@ const Signup = () => {
         const val = e.target.value;
         if(val){
             setLoading(true);
-            fetch(`http://localhost:5000/api/v1/banks/${val}`)
+            fetch(`${BASE_URL}/banks/${val}`)
             .then((res) => res.json())
             .then((json) => {
                 if(json.status === "success"){

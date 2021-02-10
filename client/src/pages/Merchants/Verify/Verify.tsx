@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {addUser} from '../../../features/user/userSlice'
 import {Container} from '../../../styles/GlobalStyles'
 
+import {BASE_URL} from '../../../api'
 const Wrapper = styled.div`
     width: 500px;
     margin: 20px auto;
@@ -69,7 +70,7 @@ function Verify() {
       
 
       const handleVerify = () => {
-        fetch(`http://localhost:5000/api/v1/users/${_id}`, {
+        fetch(`${BASE_URL}/users/${_id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",

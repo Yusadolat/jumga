@@ -6,7 +6,7 @@ import {Container} from '../../styles/GlobalStyles'
 import Logo from '../../assets/logo.svg';
 
 import {addUser} from '../../features/user/userSlice';
-
+import {BASE_URL} from '../../api'
 
 // STLES
 import {FormContainer} from './Login.style'
@@ -28,7 +28,7 @@ const Login = ({lastAccessedProduct}:any) => {
     const onSubmit = (data:Inputs) => {
         setError("");
         setLoading(true);
-        fetch("http://localhost:5000/api/v1/users/login", {
+        fetch(`${BASE_URL}/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
